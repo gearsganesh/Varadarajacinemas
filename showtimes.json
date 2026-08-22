@@ -1,0 +1,15 @@
+{
+  "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
+  "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
+  "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
+  "fetchedAt": "2026-08-13T00:00:00+05:30",
+  "dataDate": "2026-08-13",
+  "movies": [
+    {"title":"Jana Nayagan","rating":"A","language":"Tamil","format":"2D","showtimes":[{"time":"11:10 AM","audi":"AUDI 2"},{"time":"03:30 PM","audi":"AUDI 2"},{"time":"06:30 PM","audi":"AUDI 1"},{"time":"11:00 PM","audi":"AUDI 2"}]},
+    {"title":"DC","rating":"A","language":"Tamil","format":"2D","showtimes":[{"time":"11:00 AM","audi":"AUDI 1"},{"time":"02:30 PM","audi":"AUDI 1"},{"time":"07:10 PM","audi":"AUDI 4"},{"time":"10:50 PM","audi":"AUDI 1"}]},
+    {"title":"Spider-Man: Brand New Day","rating":"UA13+","language":"Tamil","format":"3D","showtimes":[{"time":"11:30 AM","audi":"AUDI 3"},{"time":"07:30 PM","audi":"AUDI 2"},{"time":"10:40 PM","audi":"AUDI 3"}]},
+    {"title":"Spider-Man: Brand New Day","rating":"UA13+","language":"English","format":"3D","showtimes":[{"time":"03:00 PM","audi":"AUDI 3"}]},
+    {"title":"G.D.N","rating":"UA7+","language":"Tamil","format":"2D","showtimes":[{"time":"10:30 AM","audi":"AUDI 4"},{"time":"07:20 PM","audi":"AUDI 3"},{"time":"10:30 PM","audi":"AUDI 4"}]},
+    {"title":"Anbe Diana","rating":"UA13+","language":"Tamil","format":"2D","showtimes":[{"time":"03:20 PM","audi":"AUDI 4"}]}
+  ]
+}
