@@ -10,6 +10,24 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070707}
 </style>
 </head>
 <body>
-<iframe class="site" src="site-v2.html" title="Varadharaja Cinemas"></iframe>
+<iframe class="site" src="site-v2.html" title="Varadharaja Cinemas" onload="brandHeader(this)"></iframe>
+<script>
+function brandHeader(frame){
+  try{
+    const doc=frame.contentDocument;
+    const logo=doc.querySelector('.nav .logo');
+    if(!logo)return;
+    logo.src='assets/varadharaja-logo-header.webp';
+    logo.alt='Varadharaja Cinemas';
+    logo.style.width='108px';
+    logo.style.height='108px';
+    logo.style.objectFit='contain';
+    logo.style.objectPosition='center';
+    const style=doc.createElement('style');
+    style.textContent='@media(max-width:760px){.nav .logo{width:88px!important;height:88px!important}} .nav{padding-left:4%!important}.nav .logo{flex:0 0 auto}';
+    doc.head.appendChild(style);
+  }catch(e){console.error('Header branding update failed',e)}
+}
+</script>
 </body>
 </html>
