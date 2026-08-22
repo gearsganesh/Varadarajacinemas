@@ -19,22 +19,23 @@ function brandHeader(frame){
     const doc=frame.contentDocument;
     const logo=doc.querySelector('.nav .logo');
     if(logo){
-      logo.src='assets/varadharaja-cinemas-logo-full.svg';
+      logo.src='assets/varadharaja-cinemas-logo.svg';
       logo.alt='Varadharaja Cinemas';
       logo.style.width='108px';
       logo.style.height='108px';
       logo.style.objectFit='contain';
       logo.style.objectPosition='center';
+      logo.onerror=()=>{logo.style.display='none'};
     }
     const style=doc.createElement('style');
     style.textContent=`
       @media(max-width:760px){.nav .logo{width:88px!important;height:88px!important}}
       .nav{padding-left:4%!important}.nav .logo{flex:0 0 auto}
+      .movie .poster{position:relative;overflow:hidden;background-size:cover!important;background-position:center!important}
+      .movie .poster.has-image:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.82),rgba(0,0,0,.04) 68%)}
+      .movie .poster .poster-label{position:relative;z-index:2;display:block}
       .live-showtimes{margin-top:10px;color:#aaa59d;font-size:11px;letter-spacing:.2px}
       .live-badge{display:inline-block;color:#d6a84f;border:1px solid #42382a;padding:5px 8px;margin-bottom:8px;font-size:10px;letter-spacing:1px;text-transform:uppercase}
-      .movie .poster{position:relative}
-      .movie .poster .poster-label{position:absolute;left:22px;bottom:22px;right:22px}
-      .movie .movie-info h3{margin-top:7px}
       .showtimes .time{cursor:pointer}
       .showtime-source{display:inline-block;margin-left:10px;color:#d6a84f}
     `;
@@ -66,6 +67,10 @@ async function loadLiveShowtimes(doc){
       const poster=doc.createElement('div');
       poster.className='poster';
       poster.style.background=['linear-gradient(145deg,#35151d,#17100c,#050505)','linear-gradient(145deg,#172735,#5b3b22,#070707)','linear-gradient(145deg,#29291d,#542b20,#070707)','linear-gradient(145deg,#1a1930,#51406b,#070707)'][index%4];
+      if(movie.poster){
+        poster.style.backgroundImage=`url("${movie.poster}")`;
+        poster.classList.add('has-image');
+      }
       poster.innerHTML='<span class="poster-label">'+escapeHtml(movie.title).replace(/: /g,':<br>')+'</span>';
       const info=doc.createElement('div');
       info.className='movie-info';
@@ -90,7 +95,7 @@ async function loadLiveShowtimes(doc){
     const subtitle=doc.querySelector('#movies .sub');
     if(subtitle){
       const d=data.dataDate||'';
-      subtitle.innerHTML='Live showtimes from TicketNew · refreshed daily'+(d?' · '+escapeHtml(d):'')+' <a class="showtime-source" href="'+TICKETNEW+'" target="_blank" rel="noopener">BOOK ON TICKETNEW →</a>';
+      subtitle.innerHTML='Live showtimes from TicketNew · refreshed every 12 hours'+(d?' · '+escapeHtml(d):'')+' <a class="showtime-source" href="'+TICKETNEW+'" target="_blank" rel="noopener">BOOK ON TICKETNEW →</a>';
     }
   }catch(err){
     console.error('Live showtimes load failed',err);
