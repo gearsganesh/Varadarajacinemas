@@ -12,21 +12,95 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070707}
 <body>
 <iframe class="site" src="site-v2.html" title="Varadharaja Cinemas" onload="brandHeader(this)"></iframe>
 <script>
+const TICKETNEW='https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507';
+
 function brandHeader(frame){
   try{
     const doc=frame.contentDocument;
     const logo=doc.querySelector('.nav .logo');
-    if(!logo)return;
-    logo.src='assets/varadharaja-logo-header.webp';
-    logo.alt='Varadharaja Cinemas';
-    logo.style.width='108px';
-    logo.style.height='108px';
-    logo.style.objectFit='contain';
-    logo.style.objectPosition='center';
+    if(logo){
+      logo.src='assets/varadharaja-cinemas-logo-full.svg';
+      logo.alt='Varadharaja Cinemas';
+      logo.style.width='108px';
+      logo.style.height='108px';
+      logo.style.objectFit='contain';
+      logo.style.objectPosition='center';
+    }
     const style=doc.createElement('style');
-    style.textContent='@media(max-width:760px){.nav .logo{width:88px!important;height:88px!important}} .nav{padding-left:4%!important}.nav .logo{flex:0 0 auto}';
+    style.textContent=`
+      @media(max-width:760px){.nav .logo{width:88px!important;height:88px!important}}
+      .nav{padding-left:4%!important}.nav .logo{flex:0 0 auto}
+      .live-showtimes{margin-top:10px;color:#aaa59d;font-size:11px;letter-spacing:.2px}
+      .live-badge{display:inline-block;color:#d6a84f;border:1px solid #42382a;padding:5px 8px;margin-bottom:8px;font-size:10px;letter-spacing:1px;text-transform:uppercase}
+      .movie .poster{position:relative}
+      .movie .poster .poster-label{position:absolute;left:22px;bottom:22px;right:22px}
+      .movie .movie-info h3{margin-top:7px}
+      .showtimes .time{cursor:pointer}
+      .showtime-source{display:inline-block;margin-left:10px;color:#d6a84f}
+    `;
     doc.head.appendChild(style);
+    loadLiveShowtimes(doc);
   }catch(e){console.error('Header branding update failed',e)}
+}
+
+async function loadLiveShowtimes(doc){
+  const grid=doc.querySelector('#movies .grid4');
+  if(!grid)return;
+  try{
+    const res=await fetch('showtimes.json?ts='+Date.now(),{cache:'no-store'});
+    if(!res.ok)throw new Error('showtimes.json '+res.status);
+    const data=await res.json();
+    if(!Array.isArray(data.movies)||!data.movies.length)throw new Error('No movie data');
+
+    const groups=new Map();
+    for(const movie of data.movies){
+      const key=movie.title+'|'+movie.language+'|'+(movie.format||'2D');
+      if(!groups.has(key))groups.set(key,{...movie,showtimes:[...(movie.showtimes||[])]});
+      else groups.get(key).showtimes.push(...(movie.showtimes||[]));
+    }
+
+    grid.innerHTML='';
+    [...groups.values()].forEach((movie,index)=>{
+      const article=doc.createElement('article');
+      article.className='card movie';
+      const poster=doc.createElement('div');
+      poster.className='poster';
+      poster.style.background=['linear-gradient(145deg,#35151d,#17100c,#050505)','linear-gradient(145deg,#172735,#5b3b22,#070707)','linear-gradient(145deg,#29291d,#542b20,#070707)','linear-gradient(145deg,#1a1930,#51406b,#070707)'][index%4];
+      poster.innerHTML='<span class="poster-label">'+escapeHtml(movie.title).replace(/: /g,':<br>')+'</span>';
+      const info=doc.createElement('div');
+      info.className='movie-info';
+      const meta=doc.createElement('small');
+      meta.textContent=(movie.language||'')+' • '+(movie.rating||'')+' • '+(movie.format||'2D');
+      const h3=doc.createElement('h3');
+      h3.textContent=movie.title;
+      const show=doc.createElement('div');
+      show.className='showtimes';
+      for(const st of movie.showtimes){
+        const btn=doc.createElement('button');
+        btn.className='time';
+        btn.textContent=st.time+(st.audi?' · '+st.audi:'');
+        btn.onclick=()=>window.open(TICKETNEW,'_blank','noopener');
+        show.appendChild(btn);
+      }
+      info.append(meta,h3,show);
+      article.append(poster,info);
+      grid.appendChild(article);
+    });
+
+    const subtitle=doc.querySelector('#movies .sub');
+    if(subtitle){
+      const d=data.dataDate||'';
+      subtitle.innerHTML='Live showtimes from TicketNew · refreshed daily'+(d?' · '+escapeHtml(d):'')+' <a class="showtime-source" href="'+TICKETNEW+'" target="_blank" rel="noopener">BOOK ON TICKETNEW →</a>';
+    }
+  }catch(err){
+    console.error('Live showtimes load failed',err);
+    const subtitle=doc.querySelector('#movies .sub');
+    if(subtitle)subtitle.innerHTML='Showtimes are temporarily unavailable. <a class="showtime-source" href="'+TICKETNEW+'" target="_blank" rel="noopener">VIEW TICKETNEW →</a>';
+  }
+}
+
+function escapeHtml(value){
+  return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 }
 </script>
 </body>
