@@ -5,104 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Varadharaja Cinemas</title>
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070707}
-.site{position:fixed;inset:0;width:100%;height:100%;border:0}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070707}.site{position:fixed;inset:0;width:100%;height:100%;border:0}
 </style>
 </head>
 <body>
 <iframe class="site" src="site-v2.html" title="Varadharaja Cinemas" onload="brandHeader(this)"></iframe>
 <script>
 const TICKETNEW='https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507';
-
-function brandHeader(frame){
-  try{
-    const doc=frame.contentDocument;
-    const logo=doc.querySelector('.nav .logo');
-    if(logo){
-      logo.src='assets/varadharaja-header-logo.svg';
-      logo.alt='Varadharaja Cinemas';
-      logo.style.width='270px';
-      logo.style.height='54px';
-      logo.style.objectFit='contain';
-      logo.style.objectPosition='left center';
-    }
-    const style=doc.createElement('style');
-    style.textContent=`
-      @media(max-width:760px){.nav .logo{width:220px!important;height:44px!important}}
-      .nav{padding-left:4%!important}.nav .logo{flex:0 0 auto}
-      .movie .poster{position:relative;overflow:hidden;background-size:cover!important;background-position:center!important}
-      .movie .poster.has-image:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.82),rgba(0,0,0,.04) 68%)}
-      .movie .poster .poster-label{position:relative;z-index:2;display:block}
-      .showtimes .time{cursor:pointer}
-      .showtime-source{display:inline-block;margin-left:10px;color:#d6a84f}
-    `;
-    doc.head.appendChild(style);
-    loadLiveShowtimes(doc);
-  }catch(e){console.error('Header branding update failed',e)}
-}
-
-async function loadLiveShowtimes(doc){
-  const grid=doc.querySelector('#movies .grid4');
-  if(!grid)return;
-  try{
-    const res=await fetch('showtimes.json?ts='+Date.now(),{cache:'no-store'});
-    if(!res.ok)throw new Error('showtimes.json '+res.status);
-    const data=await res.json();
-    if(!Array.isArray(data.movies)||!data.movies.length)throw new Error('No movie data');
-
-    const groups=new Map();
-    for(const movie of data.movies){
-      const key=movie.title+'|'+movie.language+'|'+(movie.format||'2D');
-      if(!groups.has(key))groups.set(key,{...movie,showtimes:[...(movie.showtimes||[])]});
-      else groups.get(key).showtimes.push(...(movie.showtimes||[]));
-    }
-
-    grid.innerHTML='';
-    [...groups.values()].forEach((movie,index)=>{
-      const article=doc.createElement('article');
-      article.className='card movie';
-      const poster=doc.createElement('div');
-      poster.className='poster';
-      poster.style.background=['linear-gradient(145deg,#35151d,#17100c,#050505)','linear-gradient(145deg,#172735,#5b3b22,#070707)','linear-gradient(145deg,#29291d,#542b20,#070707)','linear-gradient(145deg,#1a1930,#51406b,#070707)'][index%4];
-      if(movie.poster){
-        poster.style.backgroundImage=`url("${movie.poster}")`;
-        poster.classList.add('has-image');
-      }
-      poster.innerHTML='<span class="poster-label">'+escapeHtml(movie.title).replace(/: /g,':<br>')+'</span>';
-      const info=doc.createElement('div');
-      info.className='movie-info';
-      const meta=doc.createElement('small');
-      meta.textContent=(movie.language||'')+' • '+(movie.rating||'')+' • '+(movie.format||'2D');
-      const h3=doc.createElement('h3');
-      h3.textContent=movie.title;
-      const show=doc.createElement('div');
-      show.className='showtimes';
-      for(const st of movie.showtimes){
-        const btn=doc.createElement('button');
-        btn.className='time';
-        btn.textContent=st.time+(st.audi?' · '+st.audi:'');
-        btn.onclick=()=>window.open(TICKETNEW,'_blank','noopener');
-        show.appendChild(btn);
-      }
-      info.append(meta,h3,show);
-      article.append(poster,info);
-      grid.appendChild(article);
-    });
-
-    const subtitle=doc.querySelector('#movies .sub');
-    if(subtitle){
-      subtitle.innerHTML='<a class="showtime-source" href="'+TICKETNEW+'" target="_blank" rel="noopener">BOOK ON TICKETNEW →</a>';
-    }
-  }catch(err){
-    console.error('Live showtimes load failed',err);
-    const subtitle=doc.querySelector('#movies .sub');
-    if(subtitle)subtitle.innerHTML='<a class="showtime-source" href="'+TICKETNEW+'" target="_blank" rel="noopener">VIEW TICKETNEW →</a>';
-  }
-}
-
-function escapeHtml(value){
-  return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-}
+function brandHeader(frame){try{const doc=frame.contentDocument,logo=doc.querySelector('.nav .logo');if(logo){logo.src='assets/varadharaja-header-logo.png';logo.alt='Varadharaja Cinemas';logo.style.width='270px';logo.style.height='54px';logo.style.objectFit='contain';logo.style.objectPosition='left center'}const style=doc.createElement('style');style.textContent=`@media(max-width:760px){.nav .logo{width:220px!important;height:44px!important}.nav{height:78px!important}.book{padding:11px 14px!important;font-size:13px!important}}.nav{padding-left:4%!important}.nav .logo{flex:0 0 auto}.movie .poster{position:relative;overflow:hidden;background-size:cover!important;background-position:center!important}.movie .poster.has-image:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.82),rgba(0,0,0,.04) 68%)}.movie .poster .poster-label{position:relative;z-index:2;display:block}.showtimes .time{cursor:pointer}.showtime-source{display:inline-block;margin-left:10px;color:#d6a84f}`;doc.head.appendChild(style);loadLiveShowtimes(doc)}catch(e){console.error(e)}}
+async function loadLiveShowtimes(doc){const grid=doc.querySelector('#movies .grid4');if(!grid)return;try{const res=await fetch('showtimes.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error(res.status);const data=await res.json();if(!Array.isArray(data.movies)||!data.movies.length)throw Error('No movie data');const groups=new Map();for(const movie of data.movies){const key=movie.title+'|'+movie.language+'|'+(movie.format||'2D');if(!groups.has(key))groups.set(key,{...movie,showtimes:[...(movie.showtimes||[])]});else groups.get(key).showtimes.push(...(movie.showtimes||[]))}grid.innerHTML='';[...groups.values()].forEach((movie,index)=>{const article=doc.createElement('article');article.className='card movie';const poster=doc.createElement('div');poster.className='poster';poster.style.background=['linear-gradient(145deg,#35151d,#17100c,#050505)','linear-gradient(145deg,#172735,#5b3b22,#070707)','linear-gradient(145deg,#29291d,#542b20,#070707)','linear-gradient(145deg,#1a1930,#51406b,#070707)'][index%4];if(movie.poster){poster.style.backgroundImage=`url("${movie.poster}")`;poster.classList.add('has-image')}poster.innerHTML='<span class="poster-label">'+escapeHtml(movie.title).replace(/: /g,':<br>')+'</span>';const info=doc.createElement('div');info.className='movie-info';const meta=doc.createElement('small');meta.textContent=(movie.language||'')+' • '+(movie.rating||'')+' • '+(movie.format||'2D');const h3=doc.createElement('h3');h3.textContent=movie.title;const show=doc.createElement('div');show.className='showtimes';for(const st of movie.showtimes){const btn=doc.createElement('button');btn.className='time';btn.textContent=st.time+(st.audi?' · '+st.audi:'');btn.onclick=()=>window.open(TICKETNEW,'_blank','noopener');show.appendChild(btn)}info.append(meta,h3,show);article.append(poster,info);grid.appendChild(article)});const subtitle=doc.querySelector('#movies .sub');if(subtitle)subtitle.innerHTML='<a class="showtime-source" href="'+TICKETNEW+'" target="_blank" rel="noopener">BOOK ON TICKETNEW →</a>'}catch(err){console.error('Live showtimes load failed',err);const subtitle=doc.querySelector('#movies .sub');if(subtitle)subtitle.innerHTML='<a class="showtime-source" href="'+TICKETNEW+'" target="_blank" rel="noopener">VIEW TICKETNEW →</a>'}}
+function escapeHtml(value){return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 </script>
 </body>
 </html>
