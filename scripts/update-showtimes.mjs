@@ -2,7 +2,6 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const SOURCE = 'https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507';
-const READER = `https://r.jina.ai/http://${SOURCE.replace(/^https?:\/\//, '')}`;
 const POSTER_DIR = path.join('assets', 'posters');
 const POSTER_FALLBACKS = {
   'jana nayagan': 'https://assets.thehansindia.com/h-upload/2025/11/06/1599461-untitled-design161.jpg',
@@ -20,7 +19,7 @@ function parseShowtimes(markdown) {
   const lines = markdown.split(/\r?\n/).map(clean).filter(Boolean);
   const movies = [];
   let current = null;
-  const movieLine = /^(?:\*\s*)?(.+?)\s+((?:UA\d+\+)|(?:U\/A)|(?:A)|(?:U))\s*\|\s*(.+)$/i;
+  const movieLine = /^(?:\*\s*)?(.+?)\s+((?:UA\d+\+)|(?:U\/A)|(?:A)|(?:U)|(?:UA))\s*\|\s*(.+)$/i;
   const timeLine = /^(?:\*\s*)?(\d{1,2}:\d{2}\s*(?:AM|PM))$/i;
   const audiLine = /^(?:\*\s*)?(AUDI\s+\d+)$/i;
   for (let i = 0; i < lines.length; i++) {
@@ -45,14 +44,40 @@ function parseShowtimes(markdown) {
 }
 
 async function fetchText(url) {
-  const response = await fetch(url, { headers: { 'User-Agent': 'VaradharajaCinemasShowtimeUpdater/1.0' } });
+  const response = await fetch(url, {
+    cache: 'no-store',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/139 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,text/plain,*/*'
+    }
+  });
   if (!response.ok) throw new Error(`${response.status} ${url}`);
   return response.text();
 }
 
+async function getTicketNewSchedule() {
+  const cacheBust = `?vr_refresh=${Date.now()}`;
+  // Prefer TicketNew itself. The previous implementation used a cached reader,
+  // which could leave the site showing schedules from an older date.
+  try {
+    const direct = await fetchText(SOURCE + cacheBust);
+    const parsed = parseShowtimes(direct);
+    if (parsed.length) return { text: direct, movies: parsed, method: 'direct' };
+  } catch (error) {
+    console.warn(`Direct TicketNew fetch failed: ${error.message}`);
+  }
+
+  // Fallback for environments where TicketNew requires rendered HTML.
+  const reader = `https://r.jina.ai/http://${SOURCE.replace(/^https?:\/\//, '')}${cacheBust}`;
+  const rendered = await fetchText(reader);
+  const parsed = parseShowtimes(rendered);
+  if (!parsed.length) throw new Error('No showtimes could be parsed from the current TicketNew page. Existing showtimes.json was left untouched.');
+  return { text: rendered, movies: parsed, method: 'reader' };
+}
+
 async function downloadImage(url, file) {
   try {
-    const response = await fetch(url, { headers: { 'User-Agent': 'VaradharajaCinemasPosterUpdater/1.0', 'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' } });
+    const response = await fetch(url, { headers: { 'User-Agent': 'VaradharajaCinemasPosterUpdater/1.0', 'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' }, cache: 'no-store' });
     if (!response.ok) return false;
     const type = response.headers.get('content-type') || '';
     if (!type.startsWith('image/')) return false;
@@ -101,11 +126,9 @@ async function findPoster(title) {
 }
 
 await fs.mkdir(POSTER_DIR, { recursive: true });
-const response = await fetch(READER, { headers: { 'User-Agent': 'VaradharajaCinemasShowtimeUpdater/1.0' } });
-if (!response.ok) throw new Error(`TicketNew reader request failed: ${response.status}`);
-const markdown = await response.text();
-const movies = parseShowtimes(markdown);
-if (movies.length === 0) throw new Error('No showtimes could be parsed. Existing showtimes.json was left untouched.');
+const schedule = await getTicketNewSchedule();
+const movies = schedule.movies;
+console.log(`TicketNew schedule parsed using ${schedule.method} fetch: ${movies.length} movie/language entries.`);
 
 const posterCache = new Map();
 for (const movie of movies) {
@@ -126,7 +149,7 @@ for (const movie of movies) {
 
 const payload = {
   source: SOURCE,
-  theatre: 'Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai',
+  theatre: 'Varadharaja Cinemas 4K RGB Laser Dolby Atmos, Chennai',
   address: '190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India',
   fetchedAt: new Date().toISOString(),
   dataDate: new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()),
