@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '15 */12 * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update-showtimes.mjs'
+      - '.github/workflows/update-showtimes.yml'
 
 permissions:
   contents: write
