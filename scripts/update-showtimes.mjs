@@ -11,9 +11,49 @@ const POSTER_FALLBACKS = {
   'anbe diana': 'https://www.chennaipatrika.com/entertainment/uploads/images/image_750x_6a35376c48794.jpg'
 };
 
-function clean(s) { return s.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim(); }
-function slugify(s) { return clean(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 100); }
-function decodeUrl(s) { return s.replace(/\\u0026/g, '&').replace(/\\u003d/g, '=').replace(/\\u002f/g, '/').replace(/\\"/g, '"').replace(/\\\\/g, '\\'); }
+function clean(s) {
+  return s
+    .replace(/\u00a0/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function slugify(s) {
+  return clean(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 100);
+}
+
+function decodeUrl(s) {
+  return s.replace(/\\u0026/g, '&').replace(/\\u003d/g, '=').replace(/\\u002f/g, '/').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+}
+
+function indiaDate() {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  }).format(new Date());
+}
+
+function htmlToText(html) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, '\n')
+    .replace(/<style[\s\S]*?<\/style>/gi, '\n')
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, '\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>|<\/div>|<\/li>|<\/h[1-6]>/gi, '\n')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>');
+}
 
 function parseShowtimes(markdown) {
   const lines = markdown.split(/\r?\n/).map(clean).filter(Boolean);
@@ -22,13 +62,24 @@ function parseShowtimes(markdown) {
   const movieLine = /^(?:\*\s*)?(.+?)\s+((?:UA\d+\+)|(?:U\/A)|(?:A)|(?:U)|(?:UA))\s*\|\s*(.+)$/i;
   const timeLine = /^(?:\*\s*)?(\d{1,2}:\d{2}\s*(?:AM|PM))$/i;
   const audiLine = /^(?:\*\s*)?(AUDI\s+\d+)$/i;
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const m = line.match(movieLine);
-    if (m) { current = { title: clean(m[1]), rating: m[2], language: '', format: '2D', showtimes: [] }; movies.push(current); continue; }
+    if (m) {
+      current = { title: clean(m[1]), rating: m[2], language: '', format: '2D', showtimes: [] };
+      movies.push(current);
+      continue;
+    }
     if (!current) continue;
-    if (/^(Tamil|English|Telugu|Malayalam|Hindi|Kannada|Bengali|Marathi)$/i.test(line)) { current.language = line; continue; }
-    if (/^3D$/i.test(line)) { current.format = '3D'; continue; }
+    if (/^(Tamil|English|Telugu|Malayalam|Hindi|Kannada|Bengali|Marathi)$/i.test(line)) {
+      current.language = line;
+      continue;
+    }
+    if (/^3D$/i.test(line)) {
+      current.format = '3D';
+      continue;
+    }
     const tm = line.match(timeLine);
     if (tm) {
       let audi = '';
@@ -40,6 +91,7 @@ function parseShowtimes(markdown) {
       current.showtimes.push({ time: tm[1].toUpperCase(), audi });
     }
   }
+
   return movies.filter(m => m.title && m.language && m.showtimes.length);
 }
 
@@ -56,28 +108,43 @@ async function fetchText(url) {
 }
 
 async function getTicketNewSchedule() {
-  const cacheBust = `?vr_refresh=${Date.now()}`;
-  // Prefer TicketNew itself. The previous implementation used a cached reader,
-  // which could leave the site showing schedules from an older date.
+  const date = indiaDate();
+  const cacheBust = `vr_refresh=${Date.now()}`;
+  const directUrl = `${SOURCE}?fromdate=${date}&${cacheBust}`;
+
+  // TicketNew supports the fromdate query parameter. Always request today's
+  // India date so the updater does not silently keep yesterday's schedule.
   try {
-    const direct = await fetchText(SOURCE + cacheBust);
-    const parsed = parseShowtimes(direct);
-    if (parsed.length) return { text: direct, movies: parsed, method: 'direct' };
+    const direct = await fetchText(directUrl);
+    const directText = htmlToText(direct);
+    const parsed = parseShowtimes(directText);
+    console.log(`Direct TicketNew response: ${direct.length} bytes; parsed ${parsed.length} entries for ${date}.`);
+    if (parsed.length) return { movies: parsed, method: 'direct', date };
   } catch (error) {
     console.warn(`Direct TicketNew fetch failed: ${error.message}`);
   }
 
-  // Fallback for environments where TicketNew requires rendered HTML.
-  const reader = `https://r.jina.ai/http://${SOURCE.replace(/^https?:\/\//, '')}${cacheBust}`;
-  const rendered = await fetchText(reader);
+  // Fallback through Jina's reader when TicketNew serves content that needs
+  // rendering. Keep the same date parameter and cache-buster.
+  const readerUrl = `https://r.jina.ai/http://${directUrl.replace(/^https?:\/\//, '')}`;
+  const rendered = await fetchText(readerUrl);
   const parsed = parseShowtimes(rendered);
-  if (!parsed.length) throw new Error('No showtimes could be parsed from the current TicketNew page. Existing showtimes.json was left untouched.');
-  return { text: rendered, movies: parsed, method: 'reader' };
+  console.log(`Jina TicketNew response: ${rendered.length} bytes; parsed ${parsed.length} entries for ${date}.`);
+  if (!parsed.length) {
+    throw new Error(`No showtimes could be parsed from TicketNew for ${date}. Existing showtimes.json was left untouched.`);
+  }
+  return { movies: parsed, method: 'reader', date };
 }
 
 async function downloadImage(url, file) {
   try {
-    const response = await fetch(url, { headers: { 'User-Agent': 'VaradharajaCinemasPosterUpdater/1.0', 'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' }, cache: 'no-store' });
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'VaradharajaCinemasPosterUpdater/1.0',
+        'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+      },
+      cache: 'no-store'
+    });
     if (!response.ok) return false;
     const type = response.headers.get('content-type') || '';
     if (!type.startsWith('image/')) return false;
@@ -85,7 +152,9 @@ async function downloadImage(url, file) {
     if (buffer.length < 5000) return false;
     await fs.writeFile(file, buffer);
     return true;
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 }
 
 async function wikipediaPoster(title) {
@@ -128,7 +197,7 @@ async function findPoster(title) {
 await fs.mkdir(POSTER_DIR, { recursive: true });
 const schedule = await getTicketNewSchedule();
 const movies = schedule.movies;
-console.log(`TicketNew schedule parsed using ${schedule.method} fetch: ${movies.length} movie/language entries.`);
+console.log(`TicketNew schedule parsed using ${schedule.method} fetch: ${movies.length} movie/language entries for ${schedule.date}.`);
 
 const posterCache = new Map();
 for (const movie of movies) {
@@ -152,9 +221,10 @@ const payload = {
   theatre: 'Varadharaja Cinemas 4K RGB Laser Dolby Atmos, Chennai',
   address: '190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India',
   fetchedAt: new Date().toISOString(),
-  dataDate: new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()),
+  dataDate: schedule.date,
   refreshIntervalHours: 12,
   movies
 };
+
 await fs.writeFile('showtimes.json', JSON.stringify(payload, null, 2) + '\n');
 console.log(`Updated ${movies.length} movie/language entries and poster assets.`);
