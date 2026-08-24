@@ -2,7 +2,7 @@ name: Update TicketNew Showtimes and Posters
 
 on:
   schedule:
-    - cron: '15 */12 * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
   push:
     branches: [main]
@@ -13,9 +13,14 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ticketnew-cinema-refresh
+  cancel-in-progress: true
+
 jobs:
   update-cinema-data:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
