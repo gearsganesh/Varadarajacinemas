@@ -26,8 +26,9 @@ export function createGlobalCinematicWave() {
     inset: "0",
     width: "100vw",
     height: "100vh",
-    zIndex: "0",
-    pointerEvents: "none"
+    zIndex: "5",
+    pointerEvents: "none",
+    display: "block"
   });
   document.body.prepend(renderer.domElement);
 
@@ -240,6 +241,4 @@ export function createGlobalCinematicWave() {
   };
 }
 
-// The module was being loaded but the exported function was never invoked.
-// Start the cinematic background when the script is loaded.
 createGlobalCinematicWave();
