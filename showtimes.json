@@ -2,8 +2,35 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": null,
-  "dataDate": null,
+  "fetchedAt": "2026-08-24T18:45:00+05:30",
+  "dataDate": "2026-08-24",
   "refreshIntervalHours": 2,
-  "movies": []
+  "movies": [
+    {
+      "title": "Vishwanath and Sons",
+      "rating": "UA16+",
+      "language": "Tamil",
+      "format": "2D",
+      "poster": "/assets/posters/placeholder.svg",
+      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
+      "showtimes": [
+        { "time": "10:50 AM", "audi": "AUDI 1" },
+        { "time": "02:30 PM", "audi": "AUDI 1" },
+        { "time": "06:30 PM", "audi": "AUDI 1" },
+        { "time": "10:30 PM", "audi": "AUDI 1" }
+      ]
+    },
+    {
+      "title": "Irumudi",
+      "rating": "UA16+",
+      "language": "Telugu",
+      "format": "2D",
+      "poster": "/assets/posters/placeholder.svg",
+      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
+      "showtimes": [
+        { "time": "07:15 PM", "audi": "AUDI 2" },
+        { "time": "10:20 PM", "audi": "AUDI 3" }
+      ]
+    }
+  ]
 }
