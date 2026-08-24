@@ -1,231 +1,417 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js';
+import * as THREE from 'three';
+import { EffectComposer } from 'https://raw.githubusercontent.com/gearsganesh/Tools-Resources/main/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'https://raw.githubusercontent.com/gearsganesh/Tools-Resources/main/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'https://raw.githubusercontent.com/gearsganesh/Tools-Resources/main/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-(() => {
-  if (window.__varadarajaImmersive) return;
-  window.__varadarajaImmersive = true;
+const HERO_SELECTOR = '.hero';
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const mobile = window.matchMedia('(max-width: 760px)').matches;
-  const canvas = document.createElement('canvas');
-  canvas.id = 'cinema-webgl';
-  Object.assign(canvas.style, {
-    position:'fixed', inset:'0', width:'100%', height:'100%',
-    zIndex:'0', pointerEvents:'none', opacity:mobile?'0.72':'0.82'
-  });
-  document.body.prepend(canvas);
+const state = {
+  scene: null,
+  camera: null,
+  renderer: null,
+  composer: null,
+  bloomPass: null,
+  clock: new THREE.Clock(),
+  root: null,
+  particles: null,
+  particleData: [],
+  reels: [],
+  filmStrip: null,
+  pointer: new THREE.Vector2(),
+  pointerTarget: new THREE.Vector2(),
+  raf: 0,
+  resizeObserver: null,
+  intersectionObserver: null,
+  reducedMotion: false,
+  mobile: false,
+};
 
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true, powerPreference:'high-performance'});
-  } catch (error) {
-    canvas.remove();
-    console.warn('Three.js WebGL unavailable:', error);
-    return;
-  }
-
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 1.7));
-  renderer.setClearColor(0x000000, 0);
-
+function createScene() {
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 180);
-  camera.position.set(0, 0.8, 15);
+  scene.background = new THREE.Color(0x070707);
+  scene.fog = new THREE.Fog(0x070707, 12, 42);
+  state.scene = scene;
+  state.root = new THREE.Group();
+  scene.add(state.root);
+  return scene;
+}
 
-  // Deep 3D particle tunnel. The particles are deliberately distributed in depth,
-  // rather than on a flat screen, so cursor movement and scrolling have visible parallax.
-  const particleCount = mobile ? 8500 : 26000;
-  const positions = new Float32Array(particleCount * 3);
-  const randoms = new Float32Array(particleCount * 4);
+function createCamera() {
+  const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 70);
+  camera.position.set(0, 0.6, 14);
+  state.camera = camera;
+  return camera;
+}
 
-  for (let i = 0; i < particleCount; i++) {
+function createRenderer(hero) {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'cinematic-background-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  hero.prepend(canvas);
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha: true,
+    antialias: !state.mobile,
+    powerPreference: 'high-performance',
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, state.mobile ? 1.25 : 1.65));
+  renderer.setClearColor(0x070707, 0);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.82;
+  state.renderer = renderer;
+  return renderer;
+}
+
+function createParticles() {
+  const count = state.mobile ? 260 : 620;
+  const positions = new Float32Array(count * 3);
+  const geometry = new THREE.BufferGeometry();
+  const data = [];
+
+  for (let i = 0; i < count; i += 1) {
     const i3 = i * 3;
-    const i4 = i * 4;
-    const z = -Math.random() * 125 + 12;
-    const depth = Math.max(0.2, (-z + 8) / 125);
-    const radius = (2.0 + Math.random() * 12.0) * (0.65 + depth * 0.9);
-    const angle = Math.random() * Math.PI * 2;
-    positions[i3] = Math.cos(angle) * radius;
-    positions[i3 + 1] = Math.sin(angle) * radius * 0.62;
+    const depth = Math.random();
+    const x = (Math.random() - 0.5) * 24;
+    const y = (Math.random() - 0.5) * 12;
+    const z = -2 - depth * 36;
+    positions[i3] = x;
+    positions[i3 + 1] = y;
     positions[i3 + 2] = z;
-    randoms[i4] = Math.random();
-    randoms[i4 + 1] = Math.random();
-    randoms[i4 + 2] = Math.random();
-    randoms[i4 + 3] = Math.random();
+    data.push({
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.06 + Math.random() * 0.13,
+      drift: 0.08 + Math.random() * 0.18,
+      baseX: x,
+      baseY: y,
+      baseZ: z,
+    });
   }
 
-  const particleGeometry = new THREE.BufferGeometry();
-  particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  particleGeometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 4));
-
-  const particleMaterial = new THREE.ShaderMaterial({
-    transparent:true,
-    depthWrite:false,
-    blending:THREE.AdditiveBlending,
-    uniforms:{
-      uTime:{value:0},
-      uScroll:{value:0},
-      uPixelRatio:{value:renderer.getPixelRatio()},
-      uSize:{value:mobile?1.5:1.8}
-    },
-    vertexShader:`
-      attribute vec4 aRandom;
-      uniform float uTime;
-      uniform float uScroll;
-      uniform float uPixelRatio;
-      uniform float uSize;
-      varying float vGlow;
-      varying float vDepth;
-      void main(){
-        vec3 p=position;
-        float depth=-p.z;
-        float orbit=sin(uTime*0.16+aRandom.x*6.2831+depth*0.045)*0.55;
-        float wave=sin(depth*0.14+uTime*0.55+aRandom.y*8.0);
-        float twist=uTime*0.025+depth*0.012;
-        float ca=cos(twist), sa=sin(twist);
-        float xx=p.x*ca-p.y*sa;
-        float yy=p.x*sa+p.y*ca;
-        p.x=xx+orbit;
-        p.y=yy+wave*(0.35+aRandom.z*0.8);
-
-        // Scroll moves the viewer through the particle field.
-        p.z += mod(uScroll*72.0 + aRandom.w*10.0, 10.0);
-        p.x += sin(uScroll*5.0+depth*0.025)*0.8;
-
-        vec4 mv=modelViewMatrix*vec4(p,1.0);
-        gl_Position=projectionMatrix*mv;
-        float perspective=42.0/max(5.0,-mv.z);
-        gl_PointSize=uSize*uPixelRatio*(1.5+aRandom.x*3.5)*perspective;
-        vDepth=clamp(1.0-(-mv.z/150.0),0.0,1.0);
-        vGlow=0.55+0.45*sin(aRandom.y*10.0+uTime*1.7);
-      }
-    `,
-    fragmentShader:`
-      precision highp float;
-      varying float vGlow;
-      varying float vDepth;
-      void main(){
-        vec2 p=gl_PointCoord-0.5;
-        float d=length(p);
-        float soft=smoothstep(0.5,0.0,d);
-        float core=smoothstep(0.16,0.0,d);
-        vec3 gold=vec3(1.0,0.64,0.15);
-        vec3 white=vec3(1.0,0.92,0.65);
-        vec3 color=mix(gold,white,core*0.8);
-        float alpha=soft*(0.22+0.55*vGlow)*(0.45+vDepth);
-        gl_FragColor=vec4(color,alpha);
-      }
-    `
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  const material = new THREE.PointsMaterial({
+    color: 0xd6a84f,
+    size: state.mobile ? 0.085 : 0.105,
+    sizeAttenuation: true,
+    transparent: true,
+    opacity: 0.48,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
   });
 
-  const particles = new THREE.Points(particleGeometry, particleMaterial);
-  scene.add(particles);
+  const particles = new THREE.Points(geometry, material);
+  particles.position.set(0, 0.3, 0);
+  state.root.add(particles);
+  state.particles = particles;
+  state.particleData = data;
+  return particles;
+}
 
-  // Large luminous rings create the obvious 3D depth that the previous shader lacked.
-  const rings = [];
-  const ringGroup = new THREE.Group();
-  scene.add(ringGroup);
-  const ringCount = mobile ? 7 : 10;
+function createFilmReel({ x, y, z, scale = 1, rotation = 0 }) {
+  const reel = new THREE.Group();
+  reel.position.set(x, y, z);
+  reel.rotation.z = rotation;
+  reel.scale.setScalar(scale);
 
-  for (let i = 0; i < ringCount; i++) {
-    const geometry = new THREE.TorusGeometry(3.8 + (i % 3) * 0.75, 0.018, 8, 96);
-    const material = new THREE.MeshBasicMaterial({
-      color: i % 3 === 0 ? 0xffc45a : 0x9b5b18,
-      transparent:true,
-      opacity:i % 3 === 0 ? 0.72 : 0.38,
-      blending:THREE.AdditiveBlending,
-      depthWrite:false
-    });
-    const ring = new THREE.Mesh(geometry, material);
-    ring.position.z = -8 - i * 10;
-    ring.rotation.x = Math.PI * 0.5;
-    ring.rotation.z = i * 0.33;
-    ring.userData.phase = i * 0.73;
-    ringGroup.add(ring);
-    rings.push(ring);
+  const metal = new THREE.MeshStandardMaterial({
+    color: 0x24211d,
+    metalness: 0.78,
+    roughness: 0.32,
+  });
+  const edge = new THREE.MeshStandardMaterial({
+    color: 0x4a3a25,
+    metalness: 0.88,
+    roughness: 0.22,
+  });
+  const dark = new THREE.MeshBasicMaterial({
+    color: 0x090909,
+    transparent: true,
+    opacity: 0.94,
+  });
+
+  const outer = new THREE.Mesh(new THREE.TorusGeometry(2.35, 0.16, 12, 96), edge);
+  reel.add(outer);
+
+  const plate = new THREE.Mesh(new THREE.CylinderGeometry(2.12, 2.12, 0.08, 64), metal);
+  plate.rotation.x = Math.PI / 2;
+  reel.add(plate);
+
+  const hubOuter = new THREE.Mesh(new THREE.TorusGeometry(0.56, 0.12, 10, 48), edge);
+  reel.add(hubOuter);
+
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.43, 0.43, 0.16, 48), metal);
+  hub.rotation.x = Math.PI / 2;
+  reel.add(hub);
+
+  const axle = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.22, 32), dark);
+  axle.rotation.x = Math.PI / 2;
+  reel.add(axle);
+
+  for (let i = 0; i < 6; i += 1) {
+    const angle = (i / 6) * Math.PI * 2;
+    const spoke = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.085, 1.65, 10), edge);
+    spoke.rotation.z = angle;
+    spoke.position.set(Math.cos(angle) * 0.84, Math.sin(angle) * 0.84, 0.06);
+    reel.add(spoke);
+
+    const hole = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.12, 24), dark);
+    hole.rotation.x = Math.PI / 2;
+    hole.position.set(Math.cos(angle) * 1.35, Math.sin(angle) * 1.35, 0.08);
+    reel.add(hole);
+
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(0.25, 0.025, 6, 24), edge);
+    rim.position.copy(hole.position);
+    rim.position.z += 0.08;
+    reel.add(rim);
   }
 
-  // A subtle central cinematic halo gives the tunnel a focal point without obscuring text.
-  const halo = new THREE.Mesh(
-    new THREE.CircleGeometry(5.4, 64),
-    new THREE.MeshBasicMaterial({
-      color:0x7a3b13,
-      transparent:true,
-      opacity:0.075,
-      blending:THREE.AdditiveBlending,
-      depthWrite:false
-    })
-  );
-  halo.position.set(0,0,-28);
-  scene.add(halo);
+  const innerRing = new THREE.Mesh(new THREE.TorusGeometry(1.78, 0.035, 8, 64), edge);
+  innerRing.position.z = 0.07;
+  reel.add(innerRing);
 
-  let targetScroll = 0;
-  let currentScroll = 0;
-  let targetX = 0;
-  let targetY = 0;
-  let mouseX = 0;
-  let mouseY = 0;
+  state.root.add(reel);
+  state.reels.push({ object: reel, baseX: x, baseY: y, phase: Math.random() * Math.PI * 2 });
+  return reel;
+}
 
-  function resize(){
-    const w=window.innerWidth;
-    const h=window.innerHeight;
-    renderer.setSize(w,h,false);
-    camera.aspect=w/Math.max(1,h);
-    camera.updateProjectionMatrix();
-    particleMaterial.uniforms.uPixelRatio.value=renderer.getPixelRatio();
+function createFilmStrip() {
+  const group = new THREE.Group();
+  const material = new THREE.MeshStandardMaterial({
+    color: 0x171512,
+    metalness: 0.2,
+    roughness: 0.72,
+    transparent: true,
+    opacity: 0.42,
+  });
+  const edgeMaterial = new THREE.MeshBasicMaterial({
+    color: 0x4b3b25,
+    transparent: true,
+    opacity: 0.32,
+  });
+
+  const segments = state.mobile ? 8 : 13;
+  for (let i = 0; i < segments; i += 1) {
+    const t = i / (segments - 1);
+    const x = -9.5 + t * 19;
+    const y = -2.6 + Math.sin(t * Math.PI * 1.7) * 0.95;
+    const z = -13 - Math.sin(t * Math.PI) * 1.8;
+    const frame = new THREE.Mesh(new THREE.BoxGeometry(2.05, 1.3, 0.045), material);
+    frame.position.set(x, y, z);
+    frame.rotation.z = Math.sin(t * Math.PI * 1.7) * 0.12;
+    group.add(frame);
+
+    const topEdge = new THREE.Mesh(new THREE.BoxGeometry(2.05, 0.035, 0.06), edgeMaterial);
+    topEdge.position.set(x, y + 0.64, z + 0.04);
+    topEdge.rotation.z = frame.rotation.z;
+    group.add(topEdge);
+    const bottomEdge = topEdge.clone();
+    bottomEdge.position.y = y - 0.64;
+    group.add(bottomEdge);
+
+    for (const side of [-0.86, 0.86]) {
+      for (let h = -0.43; h <= 0.43; h += 0.43) {
+        const hole = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.065, 16), edgeMaterial);
+        hole.rotation.x = Math.PI / 2;
+        hole.position.set(x + side, y + h, z + 0.045);
+        group.add(hole);
+      }
+    }
   }
 
-  function updateScroll(){
-    const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
-    targetScroll=window.scrollY/max;
+  group.position.y = -0.6;
+  group.rotation.y = -0.08;
+  state.root.add(group);
+  state.filmStrip = group;
+  return group;
+}
+
+function createLights() {
+  const ambient = new THREE.AmbientLight(0x7d6a4e, 0.42);
+  state.scene.add(ambient);
+
+  const key = new THREE.DirectionalLight(0xffd58a, 1.0);
+  key.position.set(-6, 6, 8);
+  state.scene.add(key);
+
+  const projector = new THREE.PointLight(0xd6a84f, 2.2, 24, 2);
+  projector.position.set(4, 2.8, 2);
+  state.scene.add(projector);
+
+  const fill = new THREE.PointLight(0x5d2b25, 1.0, 18, 2);
+  fill.position.set(-6, -1, -8);
+  state.scene.add(fill);
+}
+
+function createPostProcessing() {
+  try {
+    const resolution = new THREE.Vector2(window.innerWidth, window.innerHeight);
+    const composer = new EffectComposer(state.renderer);
+    composer.addPass(new RenderPass(state.scene, state.camera));
+
+    if (!state.mobile && !state.reducedMotion) {
+      const bloom = new UnrealBloomPass(resolution, 0.42, 0.32, 0.86);
+      composer.addPass(bloom);
+      state.bloomPass = bloom;
+    }
+
+    state.composer = composer;
+  } catch (error) {
+    console.warn('Cinematic post-processing unavailable:', error);
+    state.composer = null;
+    state.bloomPass = null;
+  }
+}
+
+function handleResize() {
+  const hero = document.querySelector(HERO_SELECTOR);
+  if (!hero || !state.renderer || !state.camera) return;
+  const width = Math.max(1, hero.clientWidth);
+  const height = Math.max(1, hero.clientHeight);
+  state.camera.aspect = width / height;
+  state.camera.updateProjectionMatrix();
+  state.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, state.mobile ? 1.25 : 1.65));
+  state.renderer.setSize(width, height, false);
+  if (state.composer) state.composer.setSize(width, height);
+  if (state.bloomPass) state.bloomPass.resolution.set(width, height);
+}
+
+function handlePointerMove(event) {
+  const hero = document.querySelector(HERO_SELECTOR);
+  if (!hero) return;
+  const rect = hero.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  state.pointerTarget.x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+  state.pointerTarget.y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+}
+
+function updateScene(elapsed) {
+  state.pointer.lerp(state.pointerTarget, 0.035);
+  const p = state.pointer;
+
+  state.camera.position.x += (p.x * 0.72 - state.camera.position.x) * 0.018;
+  state.camera.position.y += (0.6 - p.y * 0.34 - state.camera.position.y) * 0.018;
+  state.camera.lookAt(p.x * 0.35, -p.y * 0.18, -10);
+
+  const attr = state.particles?.geometry.getAttribute('position');
+  if (attr) {
+    for (let i = 0; i < state.particleData.length; i += 1) {
+      const d = state.particleData[i];
+      const i3 = i * 3;
+      attr.array[i3] = d.baseX + Math.sin(elapsed * d.speed + d.phase) * d.drift + p.x * (0.08 + (-d.baseZ / 50) * 0.14);
+      attr.array[i3 + 1] = d.baseY + Math.cos(elapsed * d.speed * 0.8 + d.phase) * d.drift * 0.6 - p.y * 0.12;
+      attr.array[i3 + 2] = d.baseZ + Math.sin(elapsed * 0.08 + d.phase) * 0.18;
+    }
+    attr.needsUpdate = true;
   }
 
-  function pointerMove(e){
-    targetX=(e.clientX/Math.max(1,window.innerWidth)-0.5)*2;
-    targetY=(e.clientY/Math.max(1,window.innerHeight)-0.5)*2;
+  state.reels.forEach((item, index) => {
+    item.object.rotation.z += 0.0009 + index * 0.00025;
+    item.object.rotation.y = Math.sin(elapsed * 0.055 + item.phase) * 0.055 + p.x * (index === 0 ? 0.16 : 0.09);
+    item.object.position.x = item.baseX + p.x * (index === 0 ? 0.34 : -0.22);
+    item.object.position.y = item.baseY - p.y * (index === 0 ? 0.16 : 0.10);
+  });
+
+  if (state.filmStrip) {
+    state.filmStrip.position.x = Math.sin(elapsed * 0.045) * 0.28 + p.x * 0.12;
+    state.filmStrip.position.z = -0.5 + Math.cos(elapsed * 0.035) * 0.18;
   }
+}
 
-  window.addEventListener('resize',resize,{passive:true});
-  window.addEventListener('scroll',updateScroll,{passive:true});
-  window.addEventListener('pointermove',pointerMove,{passive:true});
-  resize();
-  updateScroll();
+function animate() {
+  state.raf = requestAnimationFrame(animate);
+  if (!state.renderer || !state.scene || !state.camera) return;
+  const elapsed = state.clock.getElapsedTime();
+  updateScene(elapsed);
+  if (state.composer) state.composer.render();
+  else state.renderer.render(state.scene, state.camera);
+}
 
-  const clock=new THREE.Clock();
-  function animate(){
-    const t=clock.getElapsedTime();
-    currentScroll += (targetScroll-currentScroll)*0.075;
-    mouseX += (targetX-mouseX)*0.075;
-    mouseY += (targetY-mouseY)*0.075;
+function pause() {
+  if (state.raf) cancelAnimationFrame(state.raf);
+  state.raf = 0;
+}
 
-    particleMaterial.uniforms.uTime.value=t;
-    particleMaterial.uniforms.uScroll.value=currentScroll;
+function resume() {
+  if (!state.raf && !state.reducedMotion) animate();
+}
 
-    // Cursor controls the camera and the entire tunnel visibly follows it.
-    camera.position.x = mouseX*2.15;
-    camera.position.y = 0.8 - mouseY*1.15;
-    camera.position.z = 15 - currentScroll*18;
-    camera.rotation.z = mouseX*0.018;
-    camera.lookAt(mouseX*1.4, -mouseY*0.7, -25-currentScroll*15);
+function dispose() {
+  pause();
+  if (state.intersectionObserver) state.intersectionObserver.disconnect();
+  if (state.resizeObserver) state.resizeObserver.disconnect();
+  window.removeEventListener('pointermove', handlePointerMove);
+  window.removeEventListener('resize', handleResize);
 
-    particles.rotation.z = t*0.018 + mouseX*0.045;
-    particles.rotation.x = mouseY*0.018;
+  state.scene?.traverse((object) => {
+    if (object.geometry) object.geometry.dispose();
+    if (object.material) {
+      const materials = Array.isArray(object.material) ? object.material : [object.material];
+      materials.forEach((material) => material.dispose());
+    }
+  });
+  state.composer?.dispose?.();
+  const canvas = state.renderer?.domElement;
+  state.renderer?.dispose();
+  if (canvas?.parentNode) canvas.parentNode.removeChild(canvas);
 
-    rings.forEach((ring,i)=>{
-      ring.rotation.z += 0.0015 + i*0.00025;
-      ring.rotation.y = Math.sin(t*0.32+ring.userData.phase)*0.42 + mouseX*0.12;
-      ring.rotation.x = Math.PI*0.5 + Math.cos(t*0.22+ring.userData.phase)*0.22 + mouseY*0.08;
-      ring.position.x = Math.sin(t*0.18+ring.userData.phase)*0.8 + mouseX*0.8;
-      ring.position.y = Math.cos(t*0.15+ring.userData.phase)*0.42 - mouseY*0.5;
-      ring.material.opacity = (i%3===0?0.66:0.30) + Math.sin(t*1.1+ring.userData.phase)*0.08;
-    });
+  state.scene = null;
+  state.camera = null;
+  state.renderer = null;
+  state.composer = null;
+  state.bloomPass = null;
+  state.particles = null;
+  state.particleData = [];
+  state.reels = [];
+  state.filmStrip = null;
+}
 
-    halo.position.x = mouseX*1.5;
-    halo.position.y = -mouseY*0.8;
-    halo.material.opacity = 0.055 + Math.sin(t*0.7)*0.018;
+function init() {
+  const hero = document.querySelector(HERO_SELECTOR);
+  if (!hero || state.renderer) return;
 
-    renderer.render(scene,camera);
-    if(!reduced) requestAnimationFrame(animate);
+  state.mobile = window.matchMedia('(max-width: 760px)').matches;
+  state.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  try {
+    createScene();
+    createCamera();
+    createRenderer(hero);
+    createLights();
+    createParticles();
+    createFilmReel({ x: 6.0, y: 1.5, z: -17, scale: 1.15, rotation: -0.22 });
+    createFilmReel({ x: -6.7, y: -0.7, z: -24, scale: 0.82, rotation: 0.4 });
+    createFilmStrip();
+    createPostProcessing();
+    handleResize();
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
+
+    if ('ResizeObserver' in window) {
+      state.resizeObserver = new ResizeObserver(handleResize);
+      state.resizeObserver.observe(hero);
+    }
+
+    if ('IntersectionObserver' in window) {
+      state.intersectionObserver = new IntersectionObserver((entries) => {
+        if (entries[0]?.isIntersecting) resume();
+        else pause();
+      }, { threshold: 0.02 });
+      state.intersectionObserver.observe(hero);
+    }
+
+    if (!state.reducedMotion) animate();
+    else {
+      updateScene(0);
+      if (state.composer) state.composer.render();
+      else state.renderer.render(state.scene, state.camera);
+    }
+  } catch (error) {
+    console.error('Varadaraja cinematic background failed:', error);
+    dispose();
   }
+}
 
-  if(reduced) renderer.render(scene,camera);
-  else requestAnimationFrame(animate);
-})();
+window.VaradarajaCinematicBackground = { init, dispose };
+init();
