@@ -12,7 +12,7 @@ const POSTER_FALLBACKS = {
 };
 
 function clean(s) {
-  return s
+  return String(s)
     .replace(/\u00a0/g, ' ')
     .replace(/&nbsp;/gi, ' ')
     .replace(/&amp;/gi, '&')
@@ -40,7 +40,7 @@ function indiaDate() {
 }
 
 function htmlToText(html) {
-  return html
+  return String(html)
     .replace(/<script[\s\S]*?<\/script>/gi, '\n')
     .replace(/<style[\s\S]*?<\/style>/gi, '\n')
     .replace(/<noscript[\s\S]*?<\/noscript>/gi, '\n')
@@ -55,24 +55,39 @@ function htmlToText(html) {
     .replace(/&gt;/gi, '>');
 }
 
-function parseShowtimes(markdown) {
-  const lines = markdown.split(/\r?\n/).map(clean).filter(Boolean);
+function parseShowtimes(input) {
+  const lines = String(input).split(/\r?\n/).map(clean).filter(Boolean);
   const movies = [];
   let current = null;
-  const movieLine = /^(?:\*\s*)?(.+?)\s+((?:UA\d+\+)|(?:U\/A)|(?:A)|(?:U)|(?:UA))\s*\|\s*(.+)$/i;
+
+  // TicketNew's reader output normally gives: Movie Title | Rating | Language,
+  // but the live page can also render the rating without a separator. Accept
+  // both shapes so a cosmetic TicketNew markup change does not break refreshes.
+  const movieLine = /^(?:\*\s*)?(.+?)\s+((?:UA\s*\d+\+)|(?:UA\d+\+)|(?:U\/A)|(?:A)|(?:U)|(?:UA))\s*(?:\||•)\s*(.+)$/i;
+  const movieLineCompact = /^(?:\*\s*)?(.+?)\s+((?:UA\s*\d+\+)|(?:UA\d+\+)|(?:U\/A)|(?:A)|(?:U)|(?:UA))\s*\|?\s*(Tamil|English|Telugu|Malayalam|Hindi|Kannada|Bengali|Marathi)(?:\s*,\s*(Tamil|English|Telugu|Malayalam|Hindi|Kannada|Bengali|Marathi))?$/i;
   const timeLine = /^(?:\*\s*)?(\d{1,2}:\d{2}\s*(?:AM|PM))$/i;
   const audiLine = /^(?:\*\s*)?(AUDI\s+\d+)$/i;
+  const languageLine = /^(Tamil|English|Telugu|Malayalam|Hindi|Kannada|Bengali|Marathi)$/i;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    const m = line.match(movieLine);
+    let m = line.match(movieLine) || line.match(movieLineCompact);
     if (m) {
-      current = { title: clean(m[1]), rating: m[2], language: '', format: '2D', showtimes: [] };
+      current = {
+        title: clean(m[1]),
+        rating: clean(m[2]),
+        language: '',
+        format: '2D',
+        showtimes: []
+      };
+      const languages = [m[3], m[4]].filter(Boolean).map(clean);
+      if (languages.length) current.language = languages[0];
       movies.push(current);
       continue;
     }
+
     if (!current) continue;
-    if (/^(Tamil|English|Telugu|Malayalam|Hindi|Kannada|Bengali|Marathi)$/i.test(line)) {
+    if (languageLine.test(line)) {
       current.language = line;
       continue;
     }
@@ -80,13 +95,14 @@ function parseShowtimes(markdown) {
       current.format = '3D';
       continue;
     }
+
     const tm = line.match(timeLine);
     if (tm) {
       let audi = '';
-      for (let j = i + 1; j <= Math.min(i + 4, lines.length - 1); j++) {
+      for (let j = i + 1; j <= Math.min(i + 5, lines.length - 1); j++) {
         const am = lines[j].match(audiLine);
         if (am) { audi = am[1].toUpperCase(); break; }
-        if (timeLine.test(lines[j]) || movieLine.test(lines[j])) break;
+        if (timeLine.test(lines[j]) || movieLine.test(lines[j]) || movieLineCompact.test(lines[j])) break;
       }
       current.showtimes.push({ time: tm[1].toUpperCase(), audi });
     }
@@ -95,45 +111,74 @@ function parseShowtimes(markdown) {
   return movies.filter(m => m.title && m.language && m.showtimes.length);
 }
 
-async function fetchText(url) {
+async function fetchText(url, headers = {}) {
   const response = await fetch(url, {
     cache: 'no-store',
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/139 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,text/plain,*/*'
+      'Accept': 'text/html,application/xhtml+xml,text/plain,*/*',
+      ...headers
     }
   });
   if (!response.ok) throw new Error(`${response.status} ${url}`);
   return response.text();
 }
 
+function currentDayNumber(date) {
+  return String(Number(date.slice(8, 10)));
+}
+
+function looksLikeRequestedDate(text, date) {
+  const day = currentDayNumber(date);
+  const normalized = String(text).replace(/\s+/g, ' ');
+  // TicketNew currently renders a compact date selector such as "24 Mon".
+  // If a date selector is present and it does not contain today's day, reject
+  // the response rather than silently publishing an older schedule.
+  const selector = normalized.match(/\b(\d{1,2})\s+(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/i);
+  if (!selector) return true;
+  return selector[1] === day;
+}
+
 async function getTicketNewSchedule() {
   const date = indiaDate();
-  const cacheBust = `vr_refresh=${Date.now()}`;
-  const directUrl = `${SOURCE}?fromdate=${date}&${cacheBust}`;
+  const directUrl = `${SOURCE}?fromdate=${date}&vr_refresh=${Date.now()}`;
 
-  // TicketNew supports the fromdate query parameter. Always request today's
-  // India date so the updater does not silently keep yesterday's schedule.
+  // TicketNew is a JavaScript-heavy page. Jina Reader's browser engine is used
+  // first, with caching explicitly disabled, so the updater receives the live
+  // page instead of an older cached rendering.
+  const readerUrl = `https://r.jina.ai/http://${directUrl.replace(/^https?:\/\//, '')}`;
+  try {
+    const rendered = await fetchText(readerUrl, {
+      'X-No-Cache': 'true',
+      'X-Cache-Tolerance': '0',
+      'X-Engine': 'browser',
+      'X-Respond-With': 'markdown',
+      'X-Wait-For-Selector': 'body'
+    });
+    const parsed = parseShowtimes(rendered);
+    console.log(`Fresh Jina/TicketNew response: ${rendered.length} bytes; parsed ${parsed.length} entries for ${date}.`);
+    if (parsed.length && looksLikeRequestedDate(rendered, date)) {
+      return { movies: parsed, method: 'jina-browser-no-cache', date };
+    }
+    console.warn(`Fresh Jina response was rejected: parsed=${parsed.length}, requestedDate=${date}.`);
+  } catch (error) {
+    console.warn(`Jina TicketNew fetch failed: ${error.message}`);
+  }
+
+  // Direct fallback for environments where Jina is unavailable.
   try {
     const direct = await fetchText(directUrl);
     const directText = htmlToText(direct);
     const parsed = parseShowtimes(directText);
     console.log(`Direct TicketNew response: ${direct.length} bytes; parsed ${parsed.length} entries for ${date}.`);
-    if (parsed.length) return { movies: parsed, method: 'direct', date };
+    if (parsed.length && looksLikeRequestedDate(directText, date)) {
+      return { movies: parsed, method: 'direct', date };
+    }
   } catch (error) {
     console.warn(`Direct TicketNew fetch failed: ${error.message}`);
   }
 
-  // Fallback through Jina's reader when TicketNew serves content that needs
-  // rendering. Keep the same date parameter and cache-buster.
-  const readerUrl = `https://r.jina.ai/http://${directUrl.replace(/^https?:\/\//, '')}`;
-  const rendered = await fetchText(readerUrl);
-  const parsed = parseShowtimes(rendered);
-  console.log(`Jina TicketNew response: ${rendered.length} bytes; parsed ${parsed.length} entries for ${date}.`);
-  if (!parsed.length) {
-    throw new Error(`No showtimes could be parsed from TicketNew for ${date}. Existing showtimes.json was left untouched.`);
-  }
-  return { movies: parsed, method: 'reader', date };
+  throw new Error(`No fresh TicketNew showtimes could be parsed for ${date}. Existing showtimes.json was left untouched.`);
 }
 
 async function downloadImage(url, file) {
@@ -197,7 +242,7 @@ async function findPoster(title) {
 await fs.mkdir(POSTER_DIR, { recursive: true });
 const schedule = await getTicketNewSchedule();
 const movies = schedule.movies;
-console.log(`TicketNew schedule parsed using ${schedule.method} fetch: ${movies.length} movie/language entries for ${schedule.date}.`);
+console.log(`TicketNew schedule parsed using ${schedule.method}: ${movies.length} movie/language entries for ${schedule.date}.`);
 
 const posterCache = new Map();
 for (const movie of movies) {
@@ -222,7 +267,7 @@ const payload = {
   address: '190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India',
   fetchedAt: new Date().toISOString(),
   dataDate: schedule.date,
-  refreshIntervalHours: 12,
+  refreshIntervalHours: 0.5,
   movies
 };
 
