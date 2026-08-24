@@ -1,138 +1,176 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js';
 
 (() => {
-  if (window.__varadarajaWebGL) return;
-  window.__varadarajaWebGL = true;
+  if (window.__varadarajaImmersive) return;
+  window.__varadarajaImmersive = true;
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobile = window.matchMedia('(max-width: 760px)').matches;
   const canvas = document.createElement('canvas');
   canvas.id = 'cinema-webgl';
-  Object.assign(canvas.style, {position:'fixed',inset:'0',width:'100%',height:'100%',zIndex:'0',pointerEvents:'none',opacity:mobile?'0.58':'0.68'});
+  Object.assign(canvas.style, {
+    position:'fixed', inset:'0', width:'100%', height:'100%',
+    zIndex:'0', pointerEvents:'none', opacity:mobile?'0.72':'0.82'
+  });
   document.body.prepend(canvas);
 
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({canvas,antialias:false,alpha:true,powerPreference:'high-performance'});
+    renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true, powerPreference:'high-performance'});
   } catch (error) {
     canvas.remove();
-    console.warn('Varadaraja WebGL unavailable:', error);
+    console.warn('Three.js WebGL unavailable:', error);
     return;
   }
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1 : 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 1.7));
   renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(54, 1, 0.1, 140);
-  camera.position.set(0, 2.4, 16);
+  const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 180);
+  camera.position.set(0, 0.8, 15);
 
-  const count = mobile ? 6500 : 19000;
-  const positions = new Float32Array(count * 3);
-  const randoms = new Float32Array(count * 4);
+  // Deep 3D particle tunnel. The particles are deliberately distributed in depth,
+  // rather than on a flat screen, so cursor movement and scrolling have visible parallax.
+  const particleCount = mobile ? 8500 : 26000;
+  const positions = new Float32Array(particleCount * 3);
+  const randoms = new Float32Array(particleCount * 4);
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < particleCount; i++) {
     const i3 = i * 3;
     const i4 = i * 4;
-    positions[i3] = (Math.random() - 0.5) * 42;
-    positions[i3 + 1] = (Math.random() - 0.5) * 11;
-    positions[i3 + 2] = -Math.random() * 82 + 7;
+    const z = -Math.random() * 125 + 12;
+    const depth = Math.max(0.2, (-z + 8) / 125);
+    const radius = (2.0 + Math.random() * 12.0) * (0.65 + depth * 0.9);
+    const angle = Math.random() * Math.PI * 2;
+    positions[i3] = Math.cos(angle) * radius;
+    positions[i3 + 1] = Math.sin(angle) * radius * 0.62;
+    positions[i3 + 2] = z;
     randoms[i4] = Math.random();
     randoms[i4 + 1] = Math.random();
     randoms[i4 + 2] = Math.random();
     randoms[i4 + 3] = Math.random();
   }
 
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 4));
+  const particleGeometry = new THREE.BufferGeometry();
+  particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 4));
 
-  const material = new THREE.ShaderMaterial({
+  const particleMaterial = new THREE.ShaderMaterial({
     transparent:true,
     depthWrite:false,
     blending:THREE.AdditiveBlending,
-    uniforms:{uTime:{value:0},uScroll:{value:0},uPixelRatio:{value:renderer.getPixelRatio()},uPointSize:{value:mobile?1.75:1.55}},
+    uniforms:{
+      uTime:{value:0},
+      uScroll:{value:0},
+      uPixelRatio:{value:renderer.getPixelRatio()},
+      uSize:{value:mobile?1.5:1.8}
+    },
     vertexShader:`
       attribute vec4 aRandom;
       uniform float uTime;
       uniform float uScroll;
       uniform float uPixelRatio;
-      uniform float uPointSize;
+      uniform float uSize;
+      varying float vGlow;
       varying float vDepth;
-      varying float vEnergy;
       void main(){
         vec3 p=position;
         float depth=-p.z;
-        float waveA=sin(p.x*0.34+depth*0.105-uTime*0.42+aRandom.x*5.0);
-        float waveB=sin(p.x*0.16-depth*0.18+uTime*0.22+aRandom.y*8.0);
-        float waveC=cos(depth*0.12+p.x*0.28-uTime*0.18);
-        float envelope=exp(-abs(p.x)*0.035);
-        p.y+=(waveA*1.15+waveB*0.75+waveC*0.35)*envelope;
-        p.y+=sin(p.x*0.08+uTime*0.12)*0.35;
-        p.x+=sin(depth*0.075+uTime*0.16+aRandom.z*6.2831)*0.55;
-        float travel=uScroll*34.0;
-        p.z+=mod(travel+aRandom.w*7.0,8.0);
-        p.y+=uScroll*1.8;
-        vec4 mvPosition=modelViewMatrix*vec4(p,1.0);
-        gl_Position=projectionMatrix*mvPosition;
-        float perspective=1.0/max(1.0,-mvPosition.z*0.055);
-        gl_PointSize=uPointSize*uPixelRatio*(2.0+aRandom.x*2.5)*perspective;
-        vDepth=clamp(1.0-(-mvPosition.z/100.0),0.0,1.0);
-        vEnergy=clamp(0.45+envelope*0.55+aRandom.y*0.35,0.0,1.0);
+        float orbit=sin(uTime*0.16+aRandom.x*6.2831+depth*0.045)*0.55;
+        float wave=sin(depth*0.14+uTime*0.55+aRandom.y*8.0);
+        float twist=uTime*0.025+depth*0.012;
+        float ca=cos(twist), sa=sin(twist);
+        float xx=p.x*ca-p.y*sa;
+        float yy=p.x*sa+p.y*ca;
+        p.x=xx+orbit;
+        p.y=yy+wave*(0.35+aRandom.z*0.8);
+
+        // Scroll moves the viewer through the particle field.
+        p.z += mod(uScroll*72.0 + aRandom.w*10.0, 10.0);
+        p.x += sin(uScroll*5.0+depth*0.025)*0.8;
+
+        vec4 mv=modelViewMatrix*vec4(p,1.0);
+        gl_Position=projectionMatrix*mv;
+        float perspective=42.0/max(5.0,-mv.z);
+        gl_PointSize=uSize*uPixelRatio*(1.5+aRandom.x*3.5)*perspective;
+        vDepth=clamp(1.0-(-mv.z/150.0),0.0,1.0);
+        vGlow=0.55+0.45*sin(aRandom.y*10.0+uTime*1.7);
       }
     `,
     fragmentShader:`
       precision highp float;
+      varying float vGlow;
       varying float vDepth;
-      varying float vEnergy;
       void main(){
-        vec2 uv=gl_PointCoord-0.5;
-        float d=length(uv);
-        float glow=smoothstep(0.5,0.02,d);
-        float core=smoothstep(0.18,0.0,d);
-        float fade=pow(vDepth,0.35)*vEnergy;
-        vec3 gold=vec3(0.92,0.61,0.20);
-        vec3 amber=vec3(1.0,0.78,0.35);
-        vec3 burgundy=vec3(0.42,0.035,0.075);
-        vec3 color=mix(gold,amber,core);
-        color=mix(color,burgundy,max(0.0,0.22-vEnergy)*2.0);
-        gl_FragColor=vec4(color,glow*fade*0.72);
+        vec2 p=gl_PointCoord-0.5;
+        float d=length(p);
+        float soft=smoothstep(0.5,0.0,d);
+        float core=smoothstep(0.16,0.0,d);
+        vec3 gold=vec3(1.0,0.64,0.15);
+        vec3 white=vec3(1.0,0.92,0.65);
+        vec3 color=mix(gold,white,core*0.8);
+        float alpha=soft*(0.22+0.55*vGlow)*(0.45+vDepth);
+        gl_FragColor=vec4(color,alpha);
       }
     `
   });
 
-  const points = new THREE.Points(geometry, material);
-  scene.add(points);
+  const particles = new THREE.Points(particleGeometry, particleMaterial);
+  scene.add(particles);
 
-  const fog = new THREE.Mesh(
-    new THREE.PlaneGeometry(70,45),
-    new THREE.ShaderMaterial({
+  // Large luminous rings create the obvious 3D depth that the previous shader lacked.
+  const rings = [];
+  const ringGroup = new THREE.Group();
+  scene.add(ringGroup);
+  const ringCount = mobile ? 7 : 10;
+
+  for (let i = 0; i < ringCount; i++) {
+    const geometry = new THREE.TorusGeometry(3.8 + (i % 3) * 0.75, 0.018, 8, 96);
+    const material = new THREE.MeshBasicMaterial({
+      color: i % 3 === 0 ? 0xffc45a : 0x9b5b18,
       transparent:true,
-      depthWrite:false,
+      opacity:i % 3 === 0 ? 0.72 : 0.38,
       blending:THREE.AdditiveBlending,
-      uniforms:{uTime:{value:0},uScroll:{value:0}},
-      vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-      fragmentShader:`precision highp float;uniform float uTime;uniform float uScroll;varying vec2 vUv;void main(){vec2 p=vUv-0.5;float d=length(p*vec2(1.0,0.65));float beam=smoothstep(0.65,0.02,d);float flow=0.5+0.5*sin(p.x*8.0+p.y*5.0+uTime*0.16+uScroll*4.0);vec3 c=mix(vec3(0.28,0.015,0.045),vec3(0.78,0.38,0.08),flow);gl_FragColor=vec4(c,beam*0.035);}`
+      depthWrite:false
+    });
+    const ring = new THREE.Mesh(geometry, material);
+    ring.position.z = -8 - i * 10;
+    ring.rotation.x = Math.PI * 0.5;
+    ring.rotation.z = i * 0.33;
+    ring.userData.phase = i * 0.73;
+    ringGroup.add(ring);
+    rings.push(ring);
+  }
+
+  // A subtle central cinematic halo gives the tunnel a focal point without obscuring text.
+  const halo = new THREE.Mesh(
+    new THREE.CircleGeometry(5.4, 64),
+    new THREE.MeshBasicMaterial({
+      color:0x7a3b13,
+      transparent:true,
+      opacity:0.075,
+      blending:THREE.AdditiveBlending,
+      depthWrite:false
     })
   );
-  fog.position.set(0,0,-5);
-  fog.rotation.x=-0.12;
-  scene.add(fog);
+  halo.position.set(0,0,-28);
+  scene.add(halo);
 
-  let targetScroll=0;
-  let currentScroll=0;
-  let pointerX=0;
-  let pointerY=0;
-  let targetPointerX=0;
-  let targetPointerY=0;
+  let targetScroll = 0;
+  let currentScroll = 0;
+  let targetX = 0;
+  let targetY = 0;
+  let mouseX = 0;
+  let mouseY = 0;
 
   function resize(){
-    const width=window.innerWidth;
-    const height=window.innerHeight;
-    renderer.setSize(width,height,false);
-    camera.aspect=width/Math.max(1,height);
+    const w=window.innerWidth;
+    const h=window.innerHeight;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/Math.max(1,h);
     camera.updateProjectionMatrix();
-    material.uniforms.uPixelRatio.value=renderer.getPixelRatio();
+    particleMaterial.uniforms.uPixelRatio.value=renderer.getPixelRatio();
   }
 
   function updateScroll(){
@@ -140,9 +178,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.m
     targetScroll=window.scrollY/max;
   }
 
-  function pointerMove(event){
-    targetPointerX=(event.clientX/Math.max(1,window.innerWidth)-0.5)*2;
-    targetPointerY=(event.clientY/Math.max(1,window.innerHeight)-0.5)*2;
+  function pointerMove(e){
+    targetX=(e.clientX/Math.max(1,window.innerWidth)-0.5)*2;
+    targetY=(e.clientY/Math.max(1,window.innerHeight)-0.5)*2;
   }
 
   window.addEventListener('resize',resize,{passive:true});
@@ -152,25 +190,41 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.m
   updateScroll();
 
   const clock=new THREE.Clock();
-  const animate=()=>{
-    const time=clock.getElapsedTime();
-    currentScroll+=(targetScroll-currentScroll)*0.055;
-    pointerX+=(targetPointerX-pointerX)*0.035;
-    pointerY+=(targetPointerY-pointerY)*0.035;
-    material.uniforms.uTime.value=time;
-    material.uniforms.uScroll.value=currentScroll;
-    fog.material.uniforms.uTime.value=time;
-    fog.material.uniforms.uScroll.value=currentScroll;
-    camera.position.x=pointerX*0.7;
-    camera.position.y=2.4-pointerY*0.45+currentScroll*1.8;
-    camera.position.z=16-currentScroll*11;
-    camera.lookAt(pointerX*0.25,currentScroll*1.1,-12-currentScroll*8);
-    points.rotation.y=Math.sin(time*0.06)*0.025;
-    points.rotation.x=Math.sin(time*0.045)*0.012;
-    fog.position.y=Math.sin(time*0.08)*0.35;
+  function animate(){
+    const t=clock.getElapsedTime();
+    currentScroll += (targetScroll-currentScroll)*0.075;
+    mouseX += (targetX-mouseX)*0.075;
+    mouseY += (targetY-mouseY)*0.075;
+
+    particleMaterial.uniforms.uTime.value=t;
+    particleMaterial.uniforms.uScroll.value=currentScroll;
+
+    // Cursor controls the camera and the entire tunnel visibly follows it.
+    camera.position.x = mouseX*2.15;
+    camera.position.y = 0.8 - mouseY*1.15;
+    camera.position.z = 15 - currentScroll*18;
+    camera.rotation.z = mouseX*0.018;
+    camera.lookAt(mouseX*1.4, -mouseY*0.7, -25-currentScroll*15);
+
+    particles.rotation.z = t*0.018 + mouseX*0.045;
+    particles.rotation.x = mouseY*0.018;
+
+    rings.forEach((ring,i)=>{
+      ring.rotation.z += 0.0015 + i*0.00025;
+      ring.rotation.y = Math.sin(t*0.32+ring.userData.phase)*0.42 + mouseX*0.12;
+      ring.rotation.x = Math.PI*0.5 + Math.cos(t*0.22+ring.userData.phase)*0.22 + mouseY*0.08;
+      ring.position.x = Math.sin(t*0.18+ring.userData.phase)*0.8 + mouseX*0.8;
+      ring.position.y = Math.cos(t*0.15+ring.userData.phase)*0.42 - mouseY*0.5;
+      ring.material.opacity = (i%3===0?0.66:0.30) + Math.sin(t*1.1+ring.userData.phase)*0.08;
+    });
+
+    halo.position.x = mouseX*1.5;
+    halo.position.y = -mouseY*0.8;
+    halo.material.opacity = 0.055 + Math.sin(t*0.7)*0.018;
+
     renderer.render(scene,camera);
     if(!reduced) requestAnimationFrame(animate);
-  };
+  }
 
   if(reduced) renderer.render(scene,camera);
   else requestAnimationFrame(animate);
