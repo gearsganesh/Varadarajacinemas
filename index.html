@@ -1,93 +1,19 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Varadharaja Cinemas</title>
-<link rel="icon" type="image/svg+xml" href="assets/varadharaja-logo.svg">
-<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070707}.site{position:fixed;inset:0;width:100%;height:100%;border:0}</style>
-</head>
-<body>
-<iframe class="site" src="site-v2.html" title="Varadharaja Cinemas" onload="brandHeader(this)"></iframe>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Varadharaja Cinemas</title><link rel="icon" type="image/svg+xml" href="assets/varadharaja-logo.svg"><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070707}.site{position:fixed;inset:0;width:100%;height:100%;border:0}</style></head>
+<body><iframe class="site" src="site-v2.html" title="Varadharaja Cinemas" onload="initSite(this)"></iframe>
 <script>
 const TICKETNEW='https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507';
 const MAP_LAT='12.937873',MAP_LNG='80.138946';
-const REFRESH_MS=30*60*1000;
-
-function brandHeader(frame){
-  try{
-    const doc=frame.contentDocument;if(!doc)return;
-    const style=doc.createElement('style');
-    style.textContent=`
-      .nav{flex-wrap:nowrap!important}.nav .logo{flex:0 0 auto!important}
-      @media(max-width:760px){
-        .nav{height:74px!important;padding:0 12px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;flex-wrap:nowrap!important;gap:8px!important}
-        .nav>a{flex:1 1 auto!important;min-width:0!important;display:flex!important;align-items:center!important;overflow:hidden!important}
-        .nav .logo{width:min(48vw,180px)!important;height:auto!important;max-height:40px!important;object-fit:contain!important;object-position:left center!important}
-        .links{display:none!important}
-        .nav>div:last-child{display:flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;margin:0!important;white-space:nowrap!important}
-        .book{box-sizing:border-box!important;display:inline-flex!important;flex:0 0 108px!important;width:108px!important;min-width:108px!important;max-width:108px!important;height:44px!important;padding:0 6px!important;align-items:center!important;justify-content:center!important;font-size:12px!important;line-height:1!important;white-space:nowrap!important}
-        .mobile{display:inline-flex!important;flex:0 0 34px!important;width:34px!important;height:34px!important;padding:0!important;align-items:center!important;justify-content:center!important;font-size:27px!important;line-height:1!important}
-        .hero{padding-top:120px!important}
-      }
-      @media(max-width:380px){.nav{padding:0 9px!important;gap:5px!important}.nav .logo{width:min(45vw,158px)!important;max-height:36px!important}.nav>div:last-child{gap:5px!important}.book{flex-basis:101px!important;width:101px!important;min-width:101px!important;max-width:101px!important;font-size:11px!important}}
-      .movie .poster{position:relative;overflow:hidden;background-size:cover!important;background-position:center!important}
-      .movie .poster.has-image:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.78),rgba(0,0,0,.03) 70%)}
-      .movie .poster .poster-label{position:relative;z-index:2}
-      .showtimes .time{cursor:pointer;position:relative}.showtimes .time.is-live{border-color:#b84d42!important;color:#fff!important}.showtimes .time.is-next{border-color:#d6a84f!important}
-      .live-status,.next-status{display:inline-block;margin-left:7px;font-size:9px;font-weight:700;letter-spacing:.8px}.live-status{color:#e66a5d}.next-status{color:#d6a84f}
-      .movie-status{display:inline-block;margin-left:8px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.movie-status.live{color:#e66a5d}.movie-status.next{color:#d6a84f}
-      .map{padding:0!important;overflow:hidden!important;min-height:320px!important}.map iframe{display:block;width:100%;height:100%;min-height:320px;border:0}`;
-    doc.head.appendChild(style);
-    const logo=doc.querySelector('.nav .logo');if(logo){logo.src='assets/varadharaja-header-logo.png';logo.alt='Varadharaja Cinemas'}
-    loadMap(doc);loadLiveShowtimes(doc);
-  }catch(e){console.error('Header/live content error',e)}
-}
-
+const REFRESH_MS=10*60*1000;
+function initSite(frame){try{const doc=frame.contentDocument;if(!doc)return;const style=doc.createElement('style');style.textContent=`
+.nav{flex-wrap:nowrap!important}.nav .logo{flex:0 0 auto!important}
+@media(max-width:760px){.nav{height:74px!important;padding:0 12px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}.nav>a{flex:1 1 auto!important;min-width:0!important;display:flex!important;align-items:center!important;overflow:hidden!important}.nav .logo{width:min(48vw,180px)!important;height:auto!important;max-height:40px!important;object-fit:contain!important;object-position:left center!important}.links{display:none!important}.nav>div:last-child{display:flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;margin:0!important}.book{box-sizing:border-box!important;display:inline-flex!important;flex:0 0 108px!important;width:108px!important;height:44px!important;padding:0 6px!important;align-items:center!important;justify-content:center!important;font-size:12px!important;white-space:nowrap!important}.mobile{display:inline-flex!important;flex:0 0 34px!important;width:34px!important;height:34px!important;padding:0!important;align-items:center!important;justify-content:center!important;font-size:27px!important}.hero{padding-top:120px!important}}
+@media(max-width:380px){.nav{padding:0 9px!important;gap:5px!important}.nav .logo{width:min(45vw,158px)!important;max-height:36px!important}.nav>div:last-child{gap:5px!important}.book{flex-basis:101px!important;width:101px!important;font-size:11px!important}}
+.movie .poster{position:relative;overflow:hidden;background-size:cover!important;background-position:center!important}.movie .poster.has-image:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.78),rgba(0,0,0,.03) 70%)}.movie .poster .poster-label{position:relative;z-index:2}.showtimes .time{cursor:pointer;position:relative}.showtimes .time.is-live{border-color:#b84d42!important;color:#fff!important}.showtimes .time.is-next{border-color:#d6a84f!important}.live-status,.next-status{display:inline-block;margin-left:7px;font-size:9px;font-weight:700;letter-spacing:.8px}.live-status{color:#e66a5d}.next-status{color:#d6a84f}.movie-status{display:inline-block;margin-left:8px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.movie-status.live{color:#e66a5d}.movie-status.next{color:#d6a84f}.map{padding:0!important;overflow:hidden!important;min-height:320px!important}.map iframe{display:block;width:100%;height:100%;min-height:320px;border:0}`;doc.head.appendChild(style);const logo=doc.querySelector('.nav .logo');if(logo){logo.src='assets/varadharaja-header-logo.png';logo.alt='Varadharaja Cinemas'}loadMap(doc);loadShowtimes(doc)}catch(e){console.error(e)}}
 function loadMap(doc){const map=doc.querySelector('#contact .map');if(map)map.innerHTML='<iframe src="https://www.google.com/maps?q='+MAP_LAT+','+MAP_LNG+'&z=17&output=embed" title="Varadharaja Cinemas location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>'}
-function parseTime(s){const m=String(s).match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);if(!m)return null;let h=Number(m[1]),min=Number(m[2]);const ap=m[3].toUpperCase();if(ap==='PM'&&h<12)h+=12;if(ap==='AM'&&h===12)h=0;return h*60+min}
+function parseTime(s){const m=String(s).match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);if(!m)return null;let h=+m[1],min=+m[2];if(m[3].toUpperCase()==='PM'&&h<12)h+=12;if(m[3].toUpperCase()==='AM'&&h===12)h=0;return h*60+min}
 function nowMinutes(){const d=new Date();return d.getHours()*60+d.getMinutes()+d.getSeconds()/60}
-function forwardDelta(start,cur){let d=start-cur;if(d<0)d+=1440;return d}
-function calculateStatuses(movies){const cur=nowMinutes(),all=[];for(const movie of movies)for(const st of movie.showtimes||[]){const start=parseTime(st.time);if(start!=null)all.push({movie,st,start})}const live=[];for(const x of all){const elapsed=(cur-x.start+1440)%1440;if(elapsed>=0&&elapsed<=150)live.push(x)}const liveKeys=new Set(live.map(x=>x.movie.title+'|'+x.movie.language+'|'+x.st.time));let next=null,nextDelta=Infinity;for(const x of all){const delta=forwardDelta(x.start,cur);if(delta>0.5&&delta<nextDelta){next=x;nextDelta=delta}}return{liveKeys,nextKey:next?next.movie.title+'|'+next.movie.language+'|'+next.st.time:null}}
-function escapeHtml(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-let liveCinemaData=null,liveCinemaDoc=null,refreshTimer=null,statusTimer=null;
-function renderLiveCinema(doc,data){
-  const grid=doc.querySelector('#movies .grid4');if(!grid)return;
-  const movies=data.movies||[];if(!movies.length)throw Error('No live movie data');
-  const statuses=calculateStatuses(movies);grid.innerHTML='';
-  movies.forEach((movie,index)=>{
-    const article=doc.createElement('article');article.className='card movie';
-    const movieKey=movie.title+'|'+movie.language+'|';
-    const liveForMovie=movie.showtimes.some(st=>statuses.liveKeys.has(movieKey+st.time));
-    const nextForMovie=movie.showtimes.some(st=>statuses.nextKey===movieKey+st.time);
-    const poster=doc.createElement('div');poster.className='poster';
-    if(movie.poster){poster.style.backgroundImage='url("'+String(movie.poster).replace(/"/g,'')+'")';poster.classList.add('has-image')}
-    else poster.style.background=['linear-gradient(145deg,#35151d,#17100c,#050505)','linear-gradient(145deg,#172735,#5b3b22,#070707)','linear-gradient(145deg,#29291d,#542b20,#070707)','linear-gradient(145deg,#1a1930,#51406b,#070707)'][index%4];
-    poster.innerHTML='<span class="poster-label">'+escapeHtml(movie.title).replace(/: /g,':<br>')+'</span>';
-    const info=doc.createElement('div');info.className='movie-info';
-    const meta=doc.createElement('small');meta.textContent=(movie.language||'')+' • '+(movie.rating||'')+' • '+(movie.format||'2D');
-    if(liveForMovie){const b=doc.createElement('span');b.className='movie-status live';b.textContent='SHOWING NOW';meta.appendChild(b)}else if(nextForMovie){const b=doc.createElement('span');b.className='movie-status next';b.textContent='NEXT SHOW';meta.appendChild(b)}
-    const h3=doc.createElement('h3');h3.textContent=movie.title;
-    const show=doc.createElement('div');show.className='showtimes';
-    for(const st of movie.showtimes||[]){const btn=doc.createElement('button');btn.className='time';const key=movieKey+st.time;const isLive=statuses.liveKeys.has(key),isNext=statuses.nextKey===key;btn.textContent=st.time+(st.audi?' · '+st.audi:'');if(isLive){btn.classList.add('is-live');const b=doc.createElement('span');b.className='live-status';b.textContent='LIVE';btn.appendChild(b)}else if(isNext){btn.classList.add('is-next');const b=doc.createElement('span');b.className='next-status';b.textContent='NEXT';btn.appendChild(b)}btn.onclick=()=>window.open(TICKETNEW,'_blank','noopener');show.appendChild(btn)}
-    info.append(meta,h3,show);article.append(poster,info);grid.appendChild(article);
-  });
-  const subtitle=doc.querySelector('#movies .sub');if(subtitle)subtitle.innerHTML='<span>Live schedule • Updated '+new Date(data.fetchedAt||Date.now()).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</span> <a class="showtime-source" style="margin-left:10px;color:#d6a84f" href="'+TICKETNEW+'" target="_blank" rel="noopener">BOOK ON TICKETNEW →</a>';
-}
-
-async function loadLiveShowtimes(doc){
-  liveCinemaDoc=doc;
-  try{
-    const res=await fetch('/api/showtimes',{cache:'no-store'});if(!res.ok)throw Error('live api '+res.status);
-    liveCinemaData=await res.json();renderLiveCinema(doc,liveCinemaData);
-  }catch(apiError){
-    console.warn('Live API failed, using snapshot',apiError);
-    try{const res=await fetch('showtimes.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('snapshot '+res.status);liveCinemaData=await res.json();renderLiveCinema(doc,liveCinemaData)}
-    catch(snapshotError){console.error('Cinema schedule unavailable',snapshotError);const subtitle=doc.querySelector('#movies .sub');if(subtitle)subtitle.innerHTML='<span>Live schedule temporarily unavailable.</span> <a style="margin-left:10px;color:#d6a84f" href="'+TICKETNEW+'" target="_blank" rel="noopener">VIEW TICKETNEW →</a>'}
-  }
-  clearTimeout(refreshTimer);refreshTimer=setTimeout(()=>{if(liveCinemaDoc)loadLiveShowtimes(liveCinemaDoc)},REFRESH_MS);
-  if(!statusTimer)statusTimer=setInterval(()=>{if(liveCinemaDoc&&liveCinemaData)try{renderLiveCinema(liveCinemaDoc,liveCinemaData)}catch(e){}},60*1000);
-}
-</script>
-</body>
-</html>
+function statuses(movies){const now=nowMinutes(),all=[];for(const movie of movies)for(const st of movie.showtimes||[]){const t=parseTime(st.time);if(t!=null)all.push({movie,st,t})}const live=new Set(),liveMovies=new Set();for(const x of all){const elapsed=(now-x.t+1440)%1440;if(elapsed>=0&&elapsed<=150){live.add(x.movie.title+'|'+x.movie.language+'|'+x.st.time);liveMovies.add(x.movie.title+'|'+x.movie.language)}}let next=null,delta=Infinity;for(const x of all){let d=x.t-now;if(d<0)d+=1440;if(d>.5&&d<delta){delta=d;next=x}}return{live,liveMovies,next:next?next.movie.title+'|'+next.movie.language+'|'+next.st.time:null}}
+function esc(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+async function loadShowtimes(doc){const grid=doc.querySelector('#movies .grid4');if(!grid)return;try{const r=await fetch('/api/showtimes?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('API '+r.status);const data=await r.json();const movies=data.movies||[];if(!movies.length)throw Error('No live movies');const s=statuses(movies);grid.innerHTML='';movies.forEach((movie,i)=>{const card=doc.createElement('article');card.className='card movie';const key=movie.title+'|'+movie.language+'|';const poster=doc.createElement('div');poster.className='poster';if(movie.poster){poster.style.backgroundImage='url("'+String(movie.poster).replace(/"/g,'')+'")';poster.classList.add('has-image')}else poster.style.background=['linear-gradient(145deg,#35151d,#17100c,#050505)','linear-gradient(145deg,#172735,#5b3b22,#070707)','linear-gradient(145deg,#29291d,#542b20,#070707)','linear-gradient(145deg,#1a1930,#51406b,#070707)'][i%4];poster.innerHTML='<span class="poster-label">'+esc(movie.title).replace(/: /g,':<br>')+'</span>';const info=doc.createElement('div');info.className='movie-info';const meta=doc.createElement('small');meta.textContent=(movie.language||'')+' • '+(movie.rating||'')+' • '+(movie.format||'2D');const movieLive=movie.showtimes.some(st=>s.liveMovies.has(key));const movieNext=movie.showtimes.some(st=>s.next===key+st.time);if(movieLive){const b=doc.createElement('span');b.className='movie-status live';b.textContent='SHOWING NOW';meta.appendChild(b)}else if(movieNext){const b=doc.createElement('span');b.className='movie-status next';b.textContent='NEXT SHOW';meta.appendChild(b)}const h=doc.createElement('h3');h.textContent=movie.title;const shows=doc.createElement('div');shows.className='showtimes';for(const st of movie.showtimes||[]){const b=doc.createElement('button');b.className='time';const k=key+st.time;b.textContent=st.time+(st.audi?' · '+st.audi:'');if(s.live.has(k)){b.classList.add('is-live');const x=doc.createElement('span');x.className='live-status';x.textContent='LIVE';b.appendChild(x)}else if(s.next===k){b.classList.add('is-next');const x=doc.createElement('span');x.className='next-status';x.textContent='NEXT';b.appendChild(x)}b.onclick=()=>window.open(TICKETNEW,'_blank','noopener');shows.appendChild(b)}info.append(meta,h,shows);card.append(poster,info);grid.appendChild(card)});const sub=doc.querySelector('#movies .sub');if(sub)sub.innerHTML='<span>Live schedule • Updated '+new Date(data.fetchedAt||Date.now()).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</span> <a style="margin-left:10px;color:#d6a84f" href="'+TICKETNEW+'" target="_blank" rel="noopener">BOOK ON TICKETNEW →</a>'}catch(e){console.error('Live showtimes:',e);const sub=doc.querySelector('#movies .sub');if(sub)sub.innerHTML='<span>Live schedule temporarily unavailable.</span> <a style="margin-left:10px;color:#d6a84f" href="'+TICKETNEW+'" target="_blank" rel="noopener">VIEW TICKETNEW →</a>'}setTimeout(()=>loadShowtimes(doc),REFRESH_MS)}
+</script></body></html>
