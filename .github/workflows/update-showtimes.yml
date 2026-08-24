@@ -1,6 +1,12 @@
 name: Update Cinema Showtimes
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-v2.html'
+      - 'scripts/update-showtimes.mjs'
+      - '.github/workflows/update-showtimes.yml'
   schedule:
     - cron: "0 */2 * * *"
   workflow_dispatch:
