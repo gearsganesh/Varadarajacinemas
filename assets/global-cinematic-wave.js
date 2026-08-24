@@ -31,7 +31,6 @@ export function createGlobalCinematicWave() {
   });
   document.body.prepend(renderer.domElement);
 
-  // Wave density is intentionally reduced on mobile.
   const mobile = matchMedia("(max-width: 700px)").matches ||
                  matchMedia("(pointer: coarse)").matches;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -45,7 +44,6 @@ export function createGlobalCinematicWave() {
   const phase = new Float32Array(count);
   const depth = new Float32Array(count);
 
-  let p = 0;
   for (let z = 0; z < rows; z++) {
     const zz = (z / (rows - 1) - 0.5) * 20;
     for (let x = 0; x < cols; x++) {
@@ -58,7 +56,6 @@ export function createGlobalCinematicWave() {
       positions[j + 2] = base[j + 2] = zz;
       phase[i] = Math.random() * Math.PI * 2;
       depth[i] = z / (rows - 1);
-      p++;
     }
   }
 
@@ -79,7 +76,6 @@ export function createGlobalCinematicWave() {
   wave.rotation.x = -0.12;
   scene.add(wave);
 
-  // Secondary star/dust field.
   const dustCount = mobile ? 260 : 700;
   const dustPos = new Float32Array(dustCount * 3);
   for (let i = 0; i < dustCount; i++) {
@@ -111,7 +107,6 @@ export function createGlobalCinematicWave() {
   gold.position.set(7, -2, 3);
   scene.add(gold);
 
-  // A very subtle theatre/projector glow.
   const glow = new THREE.Mesh(
     new THREE.PlaneGeometry(18, 10),
     new THREE.MeshBasicMaterial({
@@ -182,13 +177,11 @@ export function createGlobalCinematicWave() {
           Math.cos(travelling2) * 0.28 +
           Math.sin((xx + zz) * 0.17 + t * 2) * 0.14;
 
-        // Pointer creates a gentle local disturbance.
         const dx = xx * 0.11 - pointer.x * 1.5;
         const dz = zz * 0.08 - pointer.y * 0.7;
         const d = Math.sqrt(dx * dx + dz * dz);
         y += Math.exp(-d * d * 1.2) * pointer.y * 0.45;
 
-        // Scrolling changes the travelling speed/energy, then settles.
         y += Math.sin(zz * 0.35 + t * 8 + velocityInfluence * 5) *
              Math.min(0.25, Math.abs(velocityInfluence)) * motion;
 
@@ -199,7 +192,6 @@ export function createGlobalCinematicWave() {
 
     geometry.attributes.position.needsUpdate = true;
 
-    // Whole field parallax/depth.
     wave.position.x += ((pointer.x * 0.34) - wave.position.x) * 0.018;
     wave.position.y += ((pointer.y * 0.16) - wave.position.y) * 0.018;
     wave.rotation.z += ((pointer.x * 0.008) - wave.rotation.z) * 0.015;
@@ -207,7 +199,6 @@ export function createGlobalCinematicWave() {
     camera.position.x += ((pointer.x * 0.55) - camera.position.x) * 0.018;
     camera.position.y += ((2.2 + pointer.y * 0.28) - camera.position.y) * 0.018;
 
-    // Scroll gives the background a slow cinematic travel.
     const targetZ = 15 - Math.min(2.0, scrollY * 0.0007);
     camera.position.z += (targetZ - camera.position.z) * 0.02;
 
@@ -248,3 +239,7 @@ export function createGlobalCinematicWave() {
     }
   };
 }
+
+// The module was being loaded but the exported function was never invoked.
+// Start the cinematic background when the script is loaded.
+createGlobalCinematicWave();
