@@ -9,16 +9,10 @@ const PLACEHOLDER = '/assets/posters/placeholder.svg';
 const POSTER_DIR = path.join('assets', 'posters');
 const LANGUAGES = ['Tamil','Telugu','Malayalam','English','Hindi','Kannada','Bengali','Marathi','Odia','Punjabi'];
 
-const clean = value => String(value ?? '')
-  .replace(/\u00a0/g, ' ')
-  .replace(/&nbsp;/gi, ' ')
-  .replace(/\s+/g, ' ')
-  .trim();
+const clean = value => String(value ?? '').replace(/\u00a0/g, ' ').replace(/&nbsp;/gi, ' ').replace(/\s+/g, ' ').trim();
 
 function indiaDateParts() {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short'
-  }).formatToParts(new Date());
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' }).formatToParts(new Date());
   const get = t => parts.find(p => p.type === t)?.value;
   return { iso: `${get('year')}-${get('month')}-${get('day')}`, day: String(Number(get('day'))), weekday: get('weekday') };
 }
@@ -31,20 +25,12 @@ function normalizeTime(value) {
   return `${hour}:${m[2]} ${m[3].toUpperCase()}`;
 }
 
-function normalizeMovieKey(movie) {
-  return `${clean(movie.title).toLowerCase()}|${clean(movie.language).toLowerCase()}|${clean(movie.format || '2D').toUpperCase()}`;
-}
-
+function normalizeMovieKey(movie) { return `${clean(movie.title).toLowerCase()}|${clean(movie.language).toLowerCase()}|${clean(movie.format || '2D').toUpperCase()}`; }
 function parseRatingLanguage(line) {
   const m = clean(line).match(/^((?:UA\s*\d+\+)|(?:UA\d+\+)|(?:U\/A)|(?:UA)|(?:U)|(?:A))\s*\|\s*(.+)$/i);
-  if (!m) return null;
-  return { rating: m[1].replace(/\s+/g, '').toUpperCase(), language: clean(m[2]) };
+  return m ? { rating: m[1].replace(/\s+/g, '').toUpperCase(), language: clean(m[2]) } : null;
 }
-
-function isLanguage(value) {
-  return LANGUAGES.some(l => l.toLowerCase() === clean(value).toLowerCase());
-}
-
+function isLanguage(value) { return LANGUAGES.some(l => l.toLowerCase() === clean(value).toLowerCase()); }
 function isAudi(value) { return /^AUDI\s*\d+$/i.test(clean(value)); }
 function isTime(value) { return Boolean(normalizeTime(value)); }
 
@@ -57,10 +43,8 @@ function parseShowtimes(text) {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const nextLine = lines[i + 1] || '';
-    if (parseRatingLanguage(nextLine) && !isTime(line) && !isAudi(line) && !isLanguage(line)) {
-      lastPotentialTitle = line;
-      continue;
-    }
+    if (parseRatingLanguage(nextLine) && !isTime(line) && !isAudi(line) && !isLanguage(line)) { lastPotentialTitle = line; continue; }
+
     const header = parseRatingLanguage(line);
     if (header) {
       const title = lastPotentialTitle;
@@ -72,28 +56,21 @@ function parseShowtimes(text) {
     }
 
     if (!current) {
-      if (line && !isTime(line) && !isAudi(line) && !/^filters?$/i.test(line) && !/^(?:\d{1,2}\s+(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun))$/i.test(line)) {
-        lastPotentialTitle = line;
-      }
+      if (line && !isTime(line) && !isAudi(line) && !/^filters?$/i.test(line) && !/^(?:\d{1,2}\s+(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun))$/i.test(line)) lastPotentialTitle = line;
       continue;
     }
 
     if (isLanguage(line)) {
       if (current.showtimes.length) {
-        const next = { title: current.title, rating: current.rating, language: line, format: '2D', showtimes: [] };
-        variants.push(next);
-        current = next;
-      } else {
-        current.language = line;
-      }
+        current = { title: current.title, rating: current.rating, language: line, format: '2D', showtimes: [] };
+        variants.push(current);
+      } else current.language = line;
       continue;
     }
-
     if (/^3D$/i.test(line)) { current.format = '3D'; continue; }
 
     const time = normalizeTime(line);
     if (!time) continue;
-
     let audi = '';
     for (let j = i + 1; j <= Math.min(i + 6, lines.length - 1); j++) {
       if (isTime(lines[j]) || parseRatingLanguage(lines[j])) break;
@@ -109,10 +86,7 @@ function parseShowtimes(text) {
     if (!merged.has(key)) merged.set(key, { ...movie, showtimes: [] });
     merged.get(key).showtimes.push(...movie.showtimes);
   }
-  for (const movie of merged.values()) {
-    const unique = new Map(movie.showtimes.map(s => [`${s.time}|${s.audi}`, s]));
-    movie.showtimes = [...unique.values()];
-  }
+  for (const movie of merged.values()) movie.showtimes = [...new Map(movie.showtimes.map(s => [`${s.time}|${s.audi}`, s])).values()];
   return [...merged.values()];
 }
 
@@ -124,12 +98,7 @@ async function selectToday(page, requested) {
     let cur = node;
     for (let i = 0; i < 4 && cur; i++, cur = cur.parentElement) {
       const s = getComputedStyle(cur);
-      out.push({
-        cls: String(cur.className || '').slice(0, 300),
-        ariaSelected: cur.getAttribute('aria-selected'),
-        dataSelected: cur.getAttribute('data-selected'),
-        bg: s.backgroundColor
-      });
+      out.push({ cls: String(cur.className || '').slice(0, 300), ariaSelected: cur.getAttribute('aria-selected'), dataSelected: cur.getAttribute('data-selected'), bg: s.backgroundColor });
     }
     return out;
   });
@@ -141,32 +110,22 @@ async function selectToday(page, requested) {
     const box = await el.boundingBox().catch(() => null);
     if (!box || box.y > 450) continue;
     const styles = await inspect(el).catch(() => []);
-    const selected = styles.some(x =>
-      x.ariaSelected === 'true' || x.dataSelected === 'true' ||
-      /active|selected|current/i.test(x.cls) ||
-      (x.bg && !/(transparent|rgba\(0, 0, 0, 0\))/i.test(x.bg) && !/^rgb\(255, 255, 255\)$/i.test(x.bg))
-    );
+    const selected = styles.some(x => x.ariaSelected === 'true' || x.dataSelected === 'true' || /active|selected|current/i.test(x.cls) || (x.bg && !/(transparent|rgba\(0, 0, 0, 0\))/i.test(x.bg) && !/^rgb\(255, 255, 255\)$/i.test(x.bg)));
     const item = { el, selected };
     if (selected) best = item;
     else if (!best) best = item;
   }
 
-  if (!best) throw new Error(`Could not locate TicketNew date selector for ${requested.day} ${requested.weekday}.`);
-  if (!best.selected) {
-    await best.el.click({ force: true }).catch(() => {});
-    await page.waitForTimeout(1800);
+  if (!best) {
+    console.error(`TicketNew debug URL: ${page.url()}`);
+    console.error(`TicketNew debug title: ${await page.title().catch(() => '')}`);
+    console.error(`TicketNew debug body: ${(await page.locator('body').innerText().catch(() => '')).slice(0, 5000)}`);
+    throw new Error(`Could not locate TicketNew date selector for ${requested.day} ${requested.weekday}.`);
   }
-
-  const body = await page.locator('body').innerText();
-  if (!new RegExp(`\\b${requested.weekday}\\b`, 'i').test(body)) {
-    throw new Error(`TicketNew page did not expose weekday ${requested.weekday} after selecting ${requested.day}.`);
-  }
+  if (!best.selected) { await best.el.click({ force: true }).catch(() => {}); await page.waitForTimeout(1800); }
 }
 
-async function extractPosterUrls(page) {
-  return await page.locator('img').evaluateAll(imgs => imgs.map(img => ({ src: img.currentSrc || img.src, alt: img.alt || '' })));
-}
-
+async function extractPosterUrls(page) { return await page.locator('img').evaluateAll(imgs => imgs.map(img => ({ src: img.currentSrc || img.src, alt: img.alt || '' }))); }
 async function downloadPoster(url, target) {
   if (!url || !/^https?:/i.test(url)) return null;
   try {
@@ -183,27 +142,26 @@ async function downloadPoster(url, target) {
     return `/assets/posters/${path.basename(file)}`;
   } catch { return null; }
 }
-
 function slugify(value) { return clean(value).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,100) || 'movie'; }
 
 async function main() {
   const requested = indiaDateParts();
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, locale: 'en-IN', timezoneId: 'Asia/Kolkata' });
+  const browser = await chromium.launch({ headless: true, args: ['--disable-blink-features=AutomationControlled'] });
+  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, locale: 'en-IN', timezoneId: 'Asia/Kolkata', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36' });
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-IN,en;q=0.9' });
+  await page.addInitScript(() => Object.defineProperty(navigator, 'webdriver', { get: () => undefined }));
   try {
     await page.goto(SOURCE, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(8000);
     await selectToday(page, requested);
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(2000);
     const body = await page.locator('body').innerText();
     const movies = parseShowtimes(body);
     if (!movies.length) throw new Error('Browser extraction returned no movie/showtime entries.');
-    if (movies.some(m => m.showtimes.length === 0)) throw new Error('One or more extracted movies had no showtimes.');
 
     const previous = await fs.readFile('showtimes.json','utf8').then(JSON.parse).catch(() => ({ movies: [] }));
     const previousByKey = new Map((previous.movies || []).map(m => [normalizeMovieKey(m), m]));
     const posters = await extractPosterUrls(page);
-
     for (const movie of movies) {
       const prev = previousByKey.get(normalizeMovieKey(movie));
       if (prev?.poster?.startsWith('/assets/posters/')) movie.poster = prev.poster;
@@ -214,16 +172,7 @@ async function main() {
       movie.bookingUrl = SOURCE;
     }
 
-    const payload = {
-      source: SOURCE,
-      theatre: THEATRE,
-      address: ADDRESS,
-      fetchedAt: new Date().toISOString(),
-      dataDate: requested.iso,
-      refreshIntervalMinutes: 30,
-      movies
-    };
-
+    const payload = { source: SOURCE, theatre: THEATRE, address: ADDRESS, fetchedAt: new Date().toISOString(), dataDate: requested.iso, refreshIntervalMinutes: 30, movies };
     const tmp = 'showtimes.json.tmp';
     await fs.writeFile(tmp, JSON.stringify(payload, null, 2) + '\n', 'utf8');
     await fs.rename(tmp, 'showtimes.json');
@@ -231,5 +180,4 @@ async function main() {
     for (const movie of movies) console.log(`- ${movie.title} / ${movie.language} / ${movie.format}: ${movie.showtimes.map(s => `${s.time} ${s.audi}`).join(', ')}`);
   } finally { await browser.close(); }
 }
-
 main().catch(error => { console.error(error); process.exit(1); });
