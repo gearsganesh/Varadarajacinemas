@@ -8,7 +8,7 @@ on:
       - 'scripts/update-showtimes.mjs'
       - '.github/workflows/update-showtimes.yml'
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -26,6 +26,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+
+      - name: Install browser scraper
+        run: npm install --no-save playwright@1.55.0
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Update showtimes
         run: node scripts/update-showtimes.mjs
