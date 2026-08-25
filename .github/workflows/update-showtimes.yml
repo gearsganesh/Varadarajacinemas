@@ -27,12 +27,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install browser scraper
-        run: npm install --no-save playwright@1.55.0
-
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-
       - name: Update showtimes
         run: node scripts/update-showtimes.mjs
 
@@ -44,7 +38,7 @@ jobs:
           git add showtimes.json assets/posters
 
           if git diff --cached --quiet; then
-            echo "No showtime or poster changes."
+            echo "No showtime changes."
           else
             git commit -m "Update cinema showtimes"
             git push
