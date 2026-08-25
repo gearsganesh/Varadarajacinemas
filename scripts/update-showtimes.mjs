@@ -116,23 +116,50 @@ function parseShowtimes(text) {
   return [...merged.values()];
 }
 
-function validateDateText(text, requested) {
-  const compact = String(text).replace(/\s+/g, ' ');
-  const marker = compact.match(new RegExp(`\\b${requested.day}\\s+${requested.weekday}\\b`, 'i'));
-  if (!marker) throw new Error(`TicketNew browser did not confirm today's date (${requested.day} ${requested.weekday}).`);
-}
-
 async function selectToday(page, requested) {
   const candidates = page.getByText(requested.day, { exact: true });
   const count = Math.min(await candidates.count(), 20);
+  const inspect = async el => el.evaluate(node => {
+    const out = [];
+    let cur = node;
+    for (let i = 0; i < 4 && cur; i++, cur = cur.parentElement) {
+      const s = getComputedStyle(cur);
+      out.push({
+        cls: String(cur.className || '').slice(0, 300),
+        ariaSelected: cur.getAttribute('aria-selected'),
+        dataSelected: cur.getAttribute('data-selected'),
+        bg: s.backgroundColor
+      });
+    }
+    return out;
+  });
+
+  let best = null;
   for (let i = 0; i < count; i++) {
     const el = candidates.nth(i);
     if (!(await el.isVisible().catch(() => false))) continue;
     const box = await el.boundingBox().catch(() => null);
     if (!box || box.y > 450) continue;
-    await el.click({ force: true }).catch(() => {});
+    const styles = await inspect(el).catch(() => []);
+    const selected = styles.some(x =>
+      x.ariaSelected === 'true' || x.dataSelected === 'true' ||
+      /active|selected|current/i.test(x.cls) ||
+      (x.bg && !/(transparent|rgba\(0, 0, 0, 0\))/i.test(x.bg) && !/^rgb\(255, 255, 255\)$/i.test(x.bg))
+    );
+    const item = { el, selected };
+    if (selected) best = item;
+    else if (!best) best = item;
+  }
+
+  if (!best) throw new Error(`Could not locate TicketNew date selector for ${requested.day} ${requested.weekday}.`);
+  if (!best.selected) {
+    await best.el.click({ force: true }).catch(() => {});
     await page.waitForTimeout(1800);
-    return;
+  }
+
+  const body = await page.locator('body').innerText();
+  if (!new RegExp(`\\b${requested.weekday}\\b`, 'i').test(body)) {
+    throw new Error(`TicketNew page did not expose weekday ${requested.weekday} after selecting ${requested.day}.`);
   }
 }
 
@@ -169,9 +196,9 @@ async function main() {
     await selectToday(page, requested);
     await page.waitForTimeout(1500);
     const body = await page.locator('body').innerText();
-    validateDateText(body, requested);
     const movies = parseShowtimes(body);
     if (!movies.length) throw new Error('Browser extraction returned no movie/showtime entries.');
+    if (movies.some(m => m.showtimes.length === 0)) throw new Error('One or more extracted movies had no showtimes.');
 
     const previous = await fs.readFile('showtimes.json','utf8').then(JSON.parse).catch(() => ({ movies: [] }));
     const previousByKey = new Map((previous.movies || []).map(m => [normalizeMovieKey(m), m]));
