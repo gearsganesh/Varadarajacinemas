@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Update showtimes
+      - name: Update showtimes and 8-hour Now Showing posters
         run: node scripts/update-showtimes.mjs
 
       - name: Commit updated data
@@ -38,8 +38,8 @@ jobs:
           git add showtimes.json assets/posters
 
           if git diff --cached --quiet; then
-            echo "No showtime changes."
+            echo "No showtime or poster changes."
           else
-            git commit -m "Update cinema showtimes"
+            git commit -m "Update cinema showtimes and posters"
             git push
           fi
