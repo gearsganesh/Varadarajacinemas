@@ -2,7 +2,7 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-08-26T07:24:20.882Z",
+  "fetchedAt": "2026-08-26T08:06:44.097Z",
   "dataDate": "2026-08-26",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
@@ -32,29 +32,6 @@
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
-      "title": "Toxic: A Fairy Tale for Grown-ups",
-      "rating": "A",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "1:20 PM",
-          "audi": "AUDI 1"
-        },
-        {
-          "time": "6:00 PM",
-          "audi": "AUDI 1"
-        },
-        {
-          "time": "10:30 PM",
-          "audi": "AUDI 1"
-        }
-      ],
-      "poster": "/assets/posters/toxic-a-fairy-tale-for-grown-ups.jpg",
-      "posterUpdatedAt": "2026-08-26T03:32:37.219Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
       "title": "Modha Rathri",
       "rating": "UA16+",
       "language": "Tamil",
@@ -71,6 +48,25 @@
       ],
       "poster": "/assets/posters/modha-rathri.jpg",
       "posterUpdatedAt": "2026-08-26T02:24:50.031Z",
+      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
+    },
+    {
+      "title": "Toxic: A Fairy Tale for Grown-ups",
+      "rating": "A",
+      "language": "Tamil",
+      "format": "2D",
+      "showtimes": [
+        {
+          "time": "6:00 PM",
+          "audi": "AUDI 1"
+        },
+        {
+          "time": "10:30 PM",
+          "audi": "AUDI 1"
+        }
+      ],
+      "poster": "/assets/posters/toxic-a-fairy-tale-for-grown-ups.jpg",
+      "posterUpdatedAt": "2026-08-26T03:32:37.219Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
