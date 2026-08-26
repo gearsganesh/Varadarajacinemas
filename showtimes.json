@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-08-26T10:04:58.126Z",
+  "fetchedAt": "2026-08-26T10:59:50.489Z",
   "dataDate": "2026-08-26",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-08-26T05:28:54.048Z",
+  "nowShowingRefreshedAt": "2026-08-26T10:59:50.489Z",
   "movies": [
     {
       "title": "Vishwanath and Sons",
@@ -73,7 +73,7 @@
         }
       ],
       "poster": "/assets/posters/modha-rathri.jpg",
-      "posterUpdatedAt": "2026-08-26T02:24:50.031Z",
+      "posterUpdatedAt": "2026-08-26T10:59:50.489Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -89,21 +89,6 @@
       ],
       "poster": "/assets/posters/jana-nayagan.jpg",
       "posterUpdatedAt": "2026-08-26T03:32:40.124Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "Bethlehem Kudumba Unit",
-      "rating": "UA13+",
-      "language": "Malayalam",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "3:30 PM",
-          "audi": "AUDI 3"
-        }
-      ],
-      "poster": "/assets/posters/bethlehem-kudumba-unit.jpg",
-      "posterUpdatedAt": "2026-08-26T02:24:51.933Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
