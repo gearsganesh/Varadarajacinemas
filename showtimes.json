@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-08-26T10:59:50.489Z",
+  "fetchedAt": "2026-08-26T11:35:57.483Z",
   "dataDate": "2026-08-26",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-08-26T10:59:50.489Z",
+  "nowShowingRefreshedAt": "2026-08-26T11:35:57.483Z",
   "movies": [
     {
       "title": "Vishwanath and Sons",
@@ -24,7 +24,7 @@
         }
       ],
       "poster": "/assets/posters/vishwanath-and-sons.jpg",
-      "posterUpdatedAt": "2026-08-26T03:32:36.170Z",
+      "posterUpdatedAt": "2026-08-26T11:35:52.357Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -43,7 +43,7 @@
         }
       ],
       "poster": "/assets/posters/toxic-a-fairy-tale-for-grown-ups.jpg",
-      "posterUpdatedAt": "2026-08-26T03:32:37.219Z",
+      "posterUpdatedAt": "2026-08-26T11:35:54.605Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -58,7 +58,7 @@
         }
       ],
       "poster": "/assets/posters/irumudi.jpg",
-      "posterUpdatedAt": "2026-08-26T03:32:38.328Z",
+      "posterUpdatedAt": "2026-08-26T11:35:56.007Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -88,7 +88,7 @@
         }
       ],
       "poster": "/assets/posters/jana-nayagan.jpg",
-      "posterUpdatedAt": "2026-08-26T03:32:40.124Z",
+      "posterUpdatedAt": "2026-08-26T11:35:56.629Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -103,7 +103,7 @@
         }
       ],
       "poster": "/assets/posters/insidious-out-of-the-further.jpg",
-      "posterUpdatedAt": "2026-08-26T03:32:42.006Z",
+      "posterUpdatedAt": "2026-08-26T11:35:57.483Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
