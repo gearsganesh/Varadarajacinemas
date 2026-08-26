@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-08-26T00:57:20.902Z",
+  "fetchedAt": "2026-08-26T02:24:51.933Z",
   "dataDate": "2026-08-26",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-08-26T00:57:20.902Z",
+  "nowShowingRefreshedAt": "2026-08-26T02:24:51.933Z",
   "movies": [
     {
       "title": "Vishwanath and Sons",
@@ -78,7 +78,7 @@
         }
       ],
       "poster": "/assets/posters/modha-rathri.jpg",
-      "posterUpdatedAt": "2026-08-25T17:07:02.907Z",
+      "posterUpdatedAt": "2026-08-26T02:24:50.031Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -153,7 +153,7 @@
         }
       ],
       "poster": "/assets/posters/bethlehem-kudumba-unit.jpg",
-      "posterUpdatedAt": "2026-08-25T17:07:03.682Z",
+      "posterUpdatedAt": "2026-08-26T02:24:51.933Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
