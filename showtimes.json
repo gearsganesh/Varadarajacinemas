@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-08-27T19:11:07.907Z",
+  "fetchedAt": "2026-08-28T03:38:10.134Z",
   "dataDate": "2026-08-28",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-08-27T19:11:07.907Z",
+  "nowShowingRefreshedAt": "2026-08-28T03:38:10.134Z",
   "movies": [
     {
       "title": "Hi",
@@ -32,7 +32,7 @@
         }
       ],
       "poster": "/assets/posters/hi.jpg",
-      "posterUpdatedAt": "2026-08-27T19:11:01.447Z",
+      "posterUpdatedAt": "2026-08-28T03:38:02.328Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -55,7 +55,7 @@
         }
       ],
       "poster": "/assets/posters/vishwanath-and-sons.jpg",
-      "posterUpdatedAt": "2026-08-27T19:11:02.778Z",
+      "posterUpdatedAt": "2026-08-28T03:38:03.989Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -74,7 +74,7 @@
         }
       ],
       "poster": "/assets/posters/toxic-a-fairy-tale-for-grown-ups.jpg",
-      "posterUpdatedAt": "2026-08-27T19:11:05.209Z",
+      "posterUpdatedAt": "2026-08-28T03:38:04.405Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -93,7 +93,7 @@
         }
       ],
       "poster": "/assets/posters/once-more.jpg",
-      "posterUpdatedAt": "2026-08-27T19:11:05.381Z",
+      "posterUpdatedAt": "2026-08-28T03:38:05.602Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -108,7 +108,7 @@
         }
       ],
       "poster": "/assets/posters/irumudi.jpg",
-      "posterUpdatedAt": "2026-08-27T19:11:06.631Z",
+      "posterUpdatedAt": "2026-08-28T03:38:07.056Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -123,7 +123,7 @@
         }
       ],
       "poster": "/assets/posters/modha-rathri.jpg",
-      "posterUpdatedAt": "2026-08-27T19:11:06.699Z",
+      "posterUpdatedAt": "2026-08-28T03:38:08.117Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -138,7 +138,7 @@
         }
       ],
       "poster": "/assets/posters/jana-nayagan.jpg",
-      "posterUpdatedAt": "2026-08-27T19:11:06.785Z",
+      "posterUpdatedAt": "2026-08-28T03:38:09.176Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -168,7 +168,7 @@
         }
       ],
       "poster": "/assets/posters/bethlehem-kudumba-unit.jpg",
-      "posterUpdatedAt": "2026-08-27T19:11:07.907Z",
+      "posterUpdatedAt": "2026-08-28T03:38:10.133Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
