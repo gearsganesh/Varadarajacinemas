@@ -2,31 +2,12 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-08-29T13:16:33.509Z",
+  "fetchedAt": "2026-08-29T17:16:20.972Z",
   "dataDate": "2026-08-29",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
   "nowShowingRefreshedAt": "2026-08-29T13:16:33.509Z",
   "movies": [
-    {
-      "title": "Hi",
-      "rating": "UA13+",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "7:30 PM",
-          "audi": "AUDI 2"
-        },
-        {
-          "time": "10:20 PM",
-          "audi": "AUDI 1"
-        }
-      ],
-      "poster": "/assets/posters/hi.jpg",
-      "posterUpdatedAt": "2026-08-29T13:16:31.336Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
     {
       "title": "Vishwanath and Sons",
       "rating": "UA16+",
@@ -43,21 +24,6 @@
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
-      "title": "Irumudi",
-      "rating": "UA16+",
-      "language": "Telugu",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "7:15 PM",
-          "audi": "AUDI 3"
-        }
-      ],
-      "poster": "/assets/posters/irumudi.jpg",
-      "posterUpdatedAt": "2026-08-29T13:16:33.320Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
       "title": "Modha Rathri",
       "rating": "UA16+",
       "language": "Tamil",
@@ -65,41 +31,11 @@
       "showtimes": [
         {
           "time": "10:50 PM",
-          "audi": "AUDI 4"
+          "audi": ""
         }
       ],
       "poster": "/assets/posters/modha-rathri.jpg",
       "posterUpdatedAt": "2026-08-29T13:16:33.482Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "Jana Nayagan",
-      "rating": "A",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "6:50 PM",
-          "audi": "AUDI 4"
-        }
-      ],
-      "poster": "/assets/posters/jana-nayagan.jpg",
-      "posterUpdatedAt": "2026-08-29T13:16:33.493Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "Toxic: A Fairy Tale for Grown-ups",
-      "rating": "A",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "10:30 PM",
-          "audi": "AUDI 3"
-        }
-      ],
-      "poster": "/assets/posters/toxic-a-fairy-tale-for-grown-ups.jpg",
-      "posterUpdatedAt": "2026-08-29T13:16:33.509Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
