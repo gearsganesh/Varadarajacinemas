@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-09-04T06:12:30.556Z",
+  "fetchedAt": "2026-09-04T11:33:00.792Z",
   "dataDate": "2026-09-04",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-09-03T23:23:55.002Z",
+  "nowShowingRefreshedAt": "2026-09-04T11:33:00.792Z",
   "movies": [
     {
       "title": "Modha Rathri",
@@ -14,10 +14,6 @@
       "language": "Tamil",
       "format": "2D",
       "showtimes": [
-        {
-          "time": "2:30 PM",
-          "audi": "AUDI 4"
-        },
         {
           "time": "7:30 PM",
           "audi": "AUDI 3"
@@ -28,7 +24,7 @@
         }
       ],
       "poster": "/assets/posters/modha-rathri.jpg",
-      "posterUpdatedAt": "2026-09-03T23:23:48.909Z",
+      "posterUpdatedAt": "2026-09-04T11:32:55.914Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -37,10 +33,6 @@
       "language": "Tamil",
       "format": "2D",
       "showtimes": [
-        {
-          "time": "2:50 PM",
-          "audi": "AUDI 1"
-        },
         {
           "time": "6:30 PM",
           "audi": "AUDI 1"
@@ -51,7 +43,7 @@
         }
       ],
       "poster": "/assets/posters/hi.jpg",
-      "posterUpdatedAt": "2026-09-03T23:23:50.100Z",
+      "posterUpdatedAt": "2026-09-04T11:32:56.859Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -61,31 +53,12 @@
       "format": "2D",
       "showtimes": [
         {
-          "time": "3:30 PM",
-          "audi": "AUDI 3"
-        },
-        {
           "time": "7:00 PM",
           "audi": "AUDI 2"
         }
       ],
       "poster": "/assets/posters/vishwanath-and-sons.jpg",
-      "posterUpdatedAt": "2026-09-03T23:23:51.732Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "I'm Game",
-      "rating": "UA16+",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "3:00 PM",
-          "audi": "AUDI 2"
-        }
-      ],
-      "poster": "/assets/posters/i-m-game.jpg",
-      "posterUpdatedAt": "2026-09-03T23:23:52.426Z",
+      "posterUpdatedAt": "2026-09-04T11:32:58.647Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -100,7 +73,7 @@
         }
       ],
       "poster": "/assets/posters/i-m-game.jpg",
-      "posterUpdatedAt": "2026-09-03T23:23:52.468Z",
+      "posterUpdatedAt": "2026-09-04T11:32:59.319Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -115,7 +88,7 @@
         }
       ],
       "poster": "/assets/posters/jana-nayagan.jpg",
-      "posterUpdatedAt": "2026-09-03T23:23:54.338Z",
+      "posterUpdatedAt": "2026-09-04T11:33:00.106Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -130,7 +103,7 @@
         }
       ],
       "poster": "/assets/posters/bethlehem-kudumba-unit.jpg",
-      "posterUpdatedAt": "2026-09-03T23:23:55.002Z",
+      "posterUpdatedAt": "2026-09-04T11:33:00.792Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
