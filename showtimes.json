@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-09-04T18:45:38.992Z",
+  "fetchedAt": "2026-09-04T21:10:47.686Z",
   "dataDate": "2026-09-05",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-09-04T18:45:38.992Z",
+  "nowShowingRefreshedAt": "2026-09-04T21:10:47.686Z",
   "movies": [
     {
       "title": "Hi",
@@ -32,7 +32,7 @@
         }
       ],
       "poster": "/assets/posters/hi.jpg",
-      "posterUpdatedAt": "2026-09-04T11:32:56.859Z",
+      "posterUpdatedAt": "2026-09-04T21:10:45.746Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -59,7 +59,7 @@
         }
       ],
       "poster": "/assets/posters/modha-rathri.jpg",
-      "posterUpdatedAt": "2026-09-04T11:32:55.914Z",
+      "posterUpdatedAt": "2026-09-04T21:10:46.691Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -146,7 +146,7 @@
         }
       ],
       "poster": "/assets/posters/bethlehem-kudumba-unit.jpg",
-      "posterUpdatedAt": "2026-09-04T11:33:00.792Z",
+      "posterUpdatedAt": "2026-09-04T21:10:47.686Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
