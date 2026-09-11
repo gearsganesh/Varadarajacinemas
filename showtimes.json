@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-09-11T19:23:35.645Z",
+  "fetchedAt": "2026-09-11T21:49:32.053Z",
   "dataDate": "2026-09-12",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-09-11T19:23:35.645Z",
+  "nowShowingRefreshedAt": "2026-09-11T21:49:32.053Z",
   "movies": [
     {
       "title": "Mandaadi",
@@ -44,7 +44,7 @@
         }
       ],
       "poster": "/assets/posters/mandaadi.jpg",
-      "posterUpdatedAt": "2026-09-11T12:30:26.804Z",
+      "posterUpdatedAt": "2026-09-11T21:49:30.898Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -71,7 +71,7 @@
         }
       ],
       "poster": "/assets/posters/sardar-2.jpg",
-      "posterUpdatedAt": "2026-09-11T12:30:27.732Z",
+      "posterUpdatedAt": "2026-09-11T21:49:32.053Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
