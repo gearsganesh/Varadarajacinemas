@@ -2,7 +2,7 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-09-11T23:47:56.596Z",
+  "fetchedAt": "2026-09-12T02:41:48.851Z",
   "dataDate": "2026-09-12",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
@@ -20,11 +20,11 @@
         },
         {
           "time": "3:15 PM",
-          "audi": "AUDI 4"
+          "audi": "AUDI 2"
         },
         {
           "time": "3:15 PM",
-          "audi": "AUDI 2"
+          "audi": "AUDI 4"
         },
         {
           "time": "6:30 PM",
