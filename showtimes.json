@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-09-18T11:34:51.505Z",
+  "fetchedAt": "2026-09-18T15:38:48.050Z",
   "dataDate": "2026-09-18",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-09-18T11:34:51.505Z",
+  "nowShowingRefreshedAt": "2026-09-18T15:38:48.050Z",
   "movies": [
     {
       "title": "Mandaadi",
@@ -14,10 +14,6 @@
       "language": "Tamil",
       "format": "2D",
       "showtimes": [
-        {
-          "time": "6:30 PM",
-          "audi": "AUDI 1"
-        },
         {
           "time": "10:20 PM",
           "audi": "AUDI 1"
@@ -32,40 +28,6 @@
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
-      "title": "The Dark Heaven",
-      "rating": "UA16+",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "7:20 PM",
-          "audi": "AUDI 4"
-        },
-        {
-          "time": "10:40 PM",
-          "audi": "AUDI 4"
-        }
-      ],
-      "poster": "/assets/posters/the-dark-heaven.jpg",
-      "posterUpdatedAt": "2026-09-18T06:13:37.726Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "Happy Journey",
-      "rating": "UA13+",
-      "language": "Telugu",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "7:20 PM",
-          "audi": "AUDI 3"
-        }
-      ],
-      "poster": "/assets/posters/happy-journey.jpg",
-      "posterUpdatedAt": "2026-09-18T06:13:35.730Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
       "title": "It's a Medical Miracle",
       "rating": "UA16+",
       "language": "Malayalam",
@@ -77,22 +39,22 @@
         }
       ],
       "poster": "/assets/posters/it-s-a-medical-miracle.jpg",
-      "posterUpdatedAt": "2026-09-18T06:13:36.630Z",
+      "posterUpdatedAt": "2026-09-18T15:38:47.995Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
-      "title": "Resident Evil",
-      "rating": "A",
-      "language": "English",
+      "title": "The Dark Heaven",
+      "rating": "UA16+",
+      "language": "Tamil",
       "format": "2D",
       "showtimes": [
         {
-          "time": "7:10 PM",
-          "audi": "AUDI 2"
+          "time": "10:40 PM",
+          "audi": "AUDI 4"
         }
       ],
-      "poster": "/assets/posters/resident-evil.jpg",
-      "posterUpdatedAt": "2026-09-18T06:13:34.716Z",
+      "poster": "/assets/posters/the-dark-heaven.jpg",
+      "posterUpdatedAt": "2026-09-18T15:38:48.050Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
