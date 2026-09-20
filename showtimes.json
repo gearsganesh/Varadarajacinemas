@@ -2,7 +2,7 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-09-20T13:53:30.520Z",
+  "fetchedAt": "2026-09-20T17:13:49.894Z",
   "dataDate": "2026-09-20",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
@@ -15,39 +15,12 @@
       "format": "2D",
       "showtimes": [
         {
-          "time": "7:30 PM",
-          "audi": "AUDI 3"
-        },
-        {
-          "time": "10:20 PM",
-          "audi": "AUDI 1"
-        },
-        {
           "time": "11:00 PM",
           "audi": "AUDI 3"
         }
       ],
       "poster": "/assets/posters/mandaadi.jpg",
       "posterUpdatedAt": "2026-09-20T09:55:30.841Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "The Dark Heaven",
-      "rating": "UA16+",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "7:20 PM",
-          "audi": ""
-        },
-        {
-          "time": "10:40 PM",
-          "audi": "AUDI 4"
-        }
-      ],
-      "poster": "/assets/posters/the-dark-heaven.jpg",
-      "posterUpdatedAt": "2026-09-20T13:53:29.743Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
