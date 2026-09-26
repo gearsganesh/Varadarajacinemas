@@ -2,31 +2,12 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-09-26T11:37:51.030Z",
+  "fetchedAt": "2026-09-26T15:33:36.514Z",
   "dataDate": "2026-09-26",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-09-26T06:19:21.727Z",
+  "nowShowingRefreshedAt": "2026-09-26T15:33:36.514Z",
   "movies": [
-    {
-      "title": "Meesaya Murukku 2",
-      "rating": "UA13+",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "7:00 PM",
-          "audi": ""
-        },
-        {
-          "time": "10:20 PM",
-          "audi": "AUDI 1"
-        }
-      ],
-      "poster": "/assets/posters/meesaya-murukku-2.jpg",
-      "posterUpdatedAt": "2026-09-26T06:19:18.367Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
     {
       "title": "Mandaadi",
       "rating": "UA16+",
@@ -34,16 +15,12 @@
       "format": "2D",
       "showtimes": [
         {
-          "time": "6:30 PM",
-          "audi": "AUDI 1"
-        },
-        {
           "time": "10:50 PM",
           "audi": "AUDI 2"
         }
       ],
       "poster": "/assets/posters/mandaadi.jpg",
-      "posterUpdatedAt": "2026-09-26T06:19:18.375Z",
+      "posterUpdatedAt": "2026-09-26T15:33:34.595Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -58,7 +35,22 @@
         }
       ],
       "poster": "/assets/posters/heart-of-the-beast.jpg",
-      "posterUpdatedAt": "2026-09-26T06:19:21.719Z",
+      "posterUpdatedAt": "2026-09-26T15:33:35.827Z",
+      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
+    },
+    {
+      "title": "Meesaya Murukku 2",
+      "rating": "UA13+",
+      "language": "Tamil",
+      "format": "2D",
+      "showtimes": [
+        {
+          "time": "10:20 PM",
+          "audi": "AUDI 1"
+        }
+      ],
+      "poster": "/assets/posters/meesaya-murukku-2.jpg",
+      "posterUpdatedAt": "2026-09-26T15:33:35.834Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -69,26 +61,11 @@
       "showtimes": [
         {
           "time": "11:10 PM",
-          "audi": "AUDI 4"
+          "audi": ""
         }
       ],
       "poster": "/assets/posters/the-dark-heaven.jpg",
-      "posterUpdatedAt": "2026-09-26T06:19:21.727Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "Dorothy",
-      "rating": "A",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "7:40 PM",
-          "audi": "AUDI 3"
-        }
-      ],
-      "poster": "/assets/posters/dorothy.jpg",
-      "posterUpdatedAt": "2026-09-26T06:19:19.777Z",
+      "posterUpdatedAt": "2026-09-26T15:33:36.514Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
