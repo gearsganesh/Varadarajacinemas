@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-09-30T02:14:11.884Z",
+  "fetchedAt": "2026-09-30T08:48:44.244Z",
   "dataDate": "2026-09-30",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-09-29T23:21:48.979Z",
+  "nowShowingRefreshedAt": "2026-09-30T08:48:44.244Z",
   "movies": [
     {
       "title": "Meesaya Murukku 2",
@@ -14,10 +14,6 @@
       "language": "Tamil",
       "format": "2D",
       "showtimes": [
-        {
-          "time": "10:30 AM",
-          "audi": "AUDI 1"
-        },
         {
           "time": "2:30 PM",
           "audi": "AUDI 1"
@@ -36,7 +32,7 @@
         }
       ],
       "poster": "/assets/posters/meesaya-murukku-2.jpg",
-      "posterUpdatedAt": "2026-09-29T23:21:48.033Z",
+      "posterUpdatedAt": "2026-09-30T08:48:44.088Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -45,10 +41,6 @@
       "language": "Tamil",
       "format": "2D",
       "showtimes": [
-        {
-          "time": "11:30 AM",
-          "audi": "AUDI 2"
-        },
         {
           "time": "3:00 PM",
           "audi": "AUDI 3"
@@ -63,7 +55,7 @@
         }
       ],
       "poster": "/assets/posters/mandaadi.jpg",
-      "posterUpdatedAt": "2026-09-29T23:21:48.043Z",
+      "posterUpdatedAt": "2026-09-30T08:48:44.117Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -72,10 +64,6 @@
       "language": "Tamil",
       "format": "2D",
       "showtimes": [
-        {
-          "time": "11:00 AM",
-          "audi": "AUDI 4"
-        },
         {
           "time": "3:30 PM",
           "audi": "AUDI 2"
@@ -90,7 +78,22 @@
         }
       ],
       "poster": "/assets/posters/dorothy.jpg",
-      "posterUpdatedAt": "2026-09-29T19:31:31.721Z",
+      "posterUpdatedAt": "2026-09-30T08:48:44.166Z",
+      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
+    },
+    {
+      "title": "The Paradise",
+      "rating": "A",
+      "language": "Telugu",
+      "format": "2D",
+      "showtimes": [
+        {
+          "time": "6:45 PM",
+          "audi": "AUDI 3"
+        }
+      ],
+      "poster": "/assets/posters/the-paradise.jpg",
+      "posterUpdatedAt": "2026-09-30T08:48:44.226Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -105,22 +108,7 @@
         }
       ],
       "poster": "/assets/posters/heart-of-the-beast.jpg",
-      "posterUpdatedAt": "2026-09-29T23:21:48.979Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "Avengers Endgame: Encore",
-      "rating": "UA16+",
-      "language": "English",
-      "format": "3D",
-      "showtimes": [
-        {
-          "time": "10:50 AM",
-          "audi": "AUDI 3"
-        }
-      ],
-      "poster": "/assets/posters/avengers-endgame-encore.jpg",
-      "posterUpdatedAt": "2026-09-29T19:31:32.484Z",
+      "posterUpdatedAt": "2026-09-30T08:48:44.244Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
