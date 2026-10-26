@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-10-26T18:46:34.322Z",
+  "fetchedAt": "2026-10-26T22:59:12.828Z",
   "dataDate": "2026-10-27",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-10-26T18:46:34.322Z",
+  "nowShowingRefreshedAt": "2026-10-26T22:59:12.828Z",
   "movies": [
     {
       "title": "Jailer 2",
@@ -64,7 +64,7 @@
         }
       ],
       "poster": "/assets/posters/jailer-2.jpg",
-      "posterUpdatedAt": "2026-10-26T12:06:46.110Z",
+      "posterUpdatedAt": "2026-10-26T22:59:12.828Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
