@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-10-29T06:08:38.788Z",
+  "fetchedAt": "2026-10-29T13:28:21.554Z",
   "dataDate": "2026-10-29",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-10-29T06:08:38.788Z",
+  "nowShowingRefreshedAt": "2026-10-29T13:28:21.554Z",
   "movies": [
     {
       "title": "Jailer 2",
@@ -14,22 +14,6 @@
       "language": "Tamil",
       "format": "2D",
       "showtimes": [
-        {
-          "time": "2:30 PM",
-          "audi": "AUDI 1"
-        },
-        {
-          "time": "3:10 PM",
-          "audi": "AUDI 2"
-        },
-        {
-          "time": "3:10 PM",
-          "audi": "AUDI 4"
-        },
-        {
-          "time": "6:30 PM",
-          "audi": "AUDI 1"
-        },
         {
           "time": "7:00 PM",
           "audi": "AUDI 4"
@@ -56,25 +40,6 @@
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
-      "title": "Haiku",
-      "rating": "UA13+",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "11:50 AM",
-          "audi": "AUDI 3"
-        },
-        {
-          "time": "3:30 PM",
-          "audi": "AUDI 3"
-        }
-      ],
-      "poster": "/assets/posters/placeholder.svg",
-      "posterUpdatedAt": null,
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
       "title": "418",
       "rating": "A",
       "language": "Tamil",
@@ -89,8 +54,8 @@
           "audi": "AUDI 3"
         }
       ],
-      "poster": "/assets/posters/418.webp",
-      "posterUpdatedAt": "2026-10-27T07:11:18.949Z",
+      "poster": "/assets/posters/418.jpg",
+      "posterUpdatedAt": "2026-10-29T13:28:21.553Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
