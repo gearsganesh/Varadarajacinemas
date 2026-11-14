@@ -2,11 +2,11 @@
   "source": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507",
   "theatre": "Varadaraja Cinemas 4K RGB Laser Dolby Atmos, Chennai",
   "address": "190/2B, 1st Main Rd, Jothi Nagar, Chitlapakkam, Chennai, Tamil Nadu 600064, India",
-  "fetchedAt": "2026-11-14T09:44:20.048Z",
+  "fetchedAt": "2026-11-14T16:18:59.312Z",
   "dataDate": "2026-11-14",
   "refreshIntervalMinutes": 30,
   "nowShowingRefreshHours": 8,
-  "nowShowingRefreshedAt": "2026-11-14T09:44:20.048Z",
+  "nowShowingRefreshedAt": "2026-11-14T16:18:59.312Z",
   "movies": [
     {
       "title": "Scene",
@@ -15,62 +15,12 @@
       "format": "2D",
       "showtimes": [
         {
-          "time": "6:30 PM",
-          "audi": "AUDI 1"
-        },
-        {
-          "time": "7:20 PM",
-          "audi": "AUDI 2"
-        },
-        {
           "time": "10:20 PM",
           "audi": "AUDI 1"
         }
       ],
       "poster": "/assets/posters/scene.jpg",
-      "posterUpdatedAt": "2026-11-14T02:51:48.883Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "Ramayana",
-      "rating": "U",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "3:30 PM",
-          "audi": "AUDI 3"
-        },
-        {
-          "time": "7:00 PM",
-          "audi": ""
-        },
-        {
-          "time": "10:50 PM",
-          "audi": "AUDI 2"
-        }
-      ],
-      "poster": "/assets/posters/ramayana.jpg",
-      "posterUpdatedAt": "2026-11-14T09:44:18.223Z",
-      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
-    },
-    {
-      "title": "John Doe",
-      "rating": "UA16+",
-      "language": "Tamil",
-      "format": "2D",
-      "showtimes": [
-        {
-          "time": "7:40 PM",
-          "audi": "AUDI 3"
-        },
-        {
-          "time": "11:00 PM",
-          "audi": "AUDI 3"
-        }
-      ],
-      "poster": "/assets/posters/john-doe.jpg",
-      "posterUpdatedAt": "2026-11-14T09:44:18.894Z",
+      "posterUpdatedAt": "2026-11-14T16:18:59.312Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
@@ -81,7 +31,7 @@
       "showtimes": [
         {
           "time": "11:00 PM",
-          "audi": "AUDI 4"
+          "audi": ""
         }
       ],
       "poster": "/assets/posters/mookuthi-amman-2.jpg",
@@ -89,18 +39,33 @@
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     },
     {
-      "title": "Jailer 2",
+      "title": "John Doe",
       "rating": "UA16+",
       "language": "Tamil",
       "format": "2D",
       "showtimes": [
         {
-          "time": "3:20 PM",
-          "audi": "AUDI 4"
+          "time": "11:00 PM",
+          "audi": ""
         }
       ],
-      "poster": "/assets/posters/jailer-2.jpg",
-      "posterUpdatedAt": "2026-11-14T09:44:20.048Z",
+      "poster": "/assets/posters/john-doe.jpg",
+      "posterUpdatedAt": "2026-11-14T09:44:18.894Z",
+      "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
+    },
+    {
+      "title": "Ramayana",
+      "rating": "U",
+      "language": "Tamil",
+      "format": "2D",
+      "showtimes": [
+        {
+          "time": "10:50 PM",
+          "audi": ""
+        }
+      ],
+      "poster": "/assets/posters/ramayana.jpg",
+      "posterUpdatedAt": "2026-11-14T09:44:18.223Z",
       "bookingUrl": "https://ticketnew.com/movies/chennai/varadaraja-cinemas-4k-rgb-laser-dolby-atmos-chennai-c/1037507"
     }
   ]
